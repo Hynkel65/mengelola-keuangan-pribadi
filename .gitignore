@@ -125,3 +125,20 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# IDE and editor files
+.vscode/
+
+# OS-specific files
+.DS_Store
+
+# Temporary files and backups
+*~
+.#*
+
+# JetBrains IDEs (e.g., WebStorm, PhpStorm, etc.)
+.idea/
+
+# Production build output
+/dist/
+/build/
