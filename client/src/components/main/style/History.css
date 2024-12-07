@@ -1,0 +1,38 @@
+/* History.css */
+.history {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+}
+
+.history h2 {
+  margin-bottom: 15px;
+}
+
+.history .history-item {
+  background: #304a6e;
+  border: 2px solid #fff;
+  box-shadow: var(--box-shadow);
+  padding: 1rem;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.history .history-item p {
+  font-size: 18px;
+  text-transform: capitalize;
+  color: #fff; /* Light text color */
+}
+
+/* Set the text color based on income and expense */
+.history .history-item .expense {
+  color: #ff7675; /* Red color for expenses */
+}
+
+.history .history-item .income {
+  color: #55efc4; /* Green color for incomes */
+}
