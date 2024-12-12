@@ -1,42 +1,38 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
-const maxAge = 3 * 24 * 60 * 60;
-const saltRounds = 12; // Adjust the number of rounds as needed for bcrypt
+const maxAge = 3 * 24 * 60 * 60; // 3 days
+const saltRounds = 12;
 
 const handleError = (err) => {
   let errors = { email: "", password: "" };
 
-  // incorrect email
   if (err.message === "incorrect email") {
     errors.email = "That email is not registered";
   }
 
-  // incorrect password
   if (err.message === "incorrect password") {
     errors.password = "That password is incorrect";
   }
 
-  // duplicate error code
   if (err.code === 11000) {
     errors.email = "That email is already registered";
     return errors;
   }
 
   if (err.message.includes("user validation failed")) {
-    let errorsarray = Object.values(err.errors);
-    errorsarray.forEach(({ properties }) => {
+    let errorsArray = Object.values(err.errors);
+    errorsArray.forEach(({ properties }) => {
       errors[properties.path] = properties.message;
     });
   }
 
-  // Generic error message for unexpected errors
   console.error(err);
   errors.general = "An unexpected error occurred";
   return errors;
 };
 
-// creating tokens
 const createTokens = (id) => {
   return jwt.sign({ id }, process.env.SECRET_KEY, {
     expiresIn: maxAge,
@@ -45,20 +41,19 @@ const createTokens = (id) => {
 
 module.exports.signup = async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
-  if (password == confirmPassword) {
+  if (password === confirmPassword) {
     try {
-      const user = await User.create({ name, email, password });
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const user = await User.create({ name, email, password: hashedPassword });
       const token = createTokens(user._id);
-      res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000, secure: process.env.NODE_ENV === "production" });
+      res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000, secure: process.env.NODE_ENV === "production", sameSite: "Strict" });
       res.status(201).json({ user });
     } catch (err) {
       const errors = handleError(err);
-      res.status(404).json({ errors });
+      res.status(400).json({ errors });
     }
   } else {
-    res
-      .status(400)
-      .json({ errors: { confirmPassword: "Password Doesn't match" } });
+    res.status(400).json({ errors: { confirmPassword: "Password doesn't match" } });
   }
 };
 
@@ -67,36 +62,35 @@ module.exports.login = async (req, res) => {
   try {
     const user = await User.login(email, password);
     const token = createTokens(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000, secure: process.env.NODE_ENV === "production" });
+    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000, secure: process.env.NODE_ENV === "production", sameSite: "Strict" });
     res.status(200).json({ user });
   } catch (err) {
     const errors = handleError(err);
-    res.status(404).json({ errors });
+    res.status(400).json({ errors });
   }
 };
 
 module.exports.logout = (req, res) => {
-  res
-    .clearCookie("jwt")
-    .status(204)
-    .json({ message: "Logged out successfully" });
+  res.clearCookie("jwt").status(204).json({ message: "Logged out successfully" });
 };
 
 module.exports.auth = async (req, res) => {
-  let token = req.cookies.jwt;
+  const token = req.cookies.jwt;
   if (token) {
     jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
       if (err) {
-        res.status(200).json({ msg: "Login to Proceed" });
+        res.status(401).json({ msg: "Login to Proceed" });
       } else {
         const user = await User.findById(decodedToken.id);
         if (user) {
-          res.status(200).json({ msg: "User Login Found" });
+          res.status(200).json({ msg: "User  Login Found" });
+        } else {
+          res.status(404).json({ msg: "User  not found" });
         }
       }
     });
   } else {
-    res.status(200).json({ msg: "Login to Proceed" });
+    res.status(401).json({ msg: "Login to Proceed" });
   }
 };
 

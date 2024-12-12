@@ -102,27 +102,21 @@ exports.deleteIncome= async (req, res, next) => {
 exports.updateIncome = async (req, res, next) => {
     try {
         const income = await Income.findById(req.params.id);
-
         if(!income) {
             return res.status(404).json({
                 success: false,
-                error: 'No transaction found'
+                error: 'No income found'
             });
         }
-
-        income.text = req.body.text;
+        
+        income.title = req.body.title;
         income.amount = req.body.amount;
-
-        if (req.file) {
-          if (income.image) {
-            const oldImagePath = path.join(__dirname, '../uploads', income.image);
-            fs.unlinkSync(oldImagePath);
-          }
-          income.image = req.file.filename;
-        }
+        income.date = req.body.date;
+        income.category = req.body.category;
+        income.description = req.body.description;
 
         await income.save();
-
+        
         return res.status(200).json({
             success: true,
             data: income

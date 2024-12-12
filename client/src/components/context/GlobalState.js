@@ -78,12 +78,25 @@ export const GlobalProvider = ({ children }) => {
   };
 
   // Action to update income
-  const updateIncome = async (id, incomeData) => {
+  const updateIncome = async (id, updatedIncomeData) => {
     try {
-      const res = await axios.patch(`/api/v1/incomes/${id}`, incomeData);
-      dispatch({ type: 'UPDATE_INCOME', payload: res.data.data });
+      const response = await fetch(`/api/v1/incomes/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedIncomeData),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to update income: ${response.status} ${response.statusText}`);
+      }
+  
+      const updatedIncome = await response.json();
+      return updatedIncome;
     } catch (error) {
-      dispatch({ type: 'TRANSACTION_ERROR', payload: error.response.data.error });
+      console.error('Error updating income:', error);
+      throw error;
     }
   };
 

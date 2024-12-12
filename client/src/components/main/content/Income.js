@@ -97,32 +97,17 @@ const Income = ({ getFileInputRef }) => {
       date: new Date(income.date).toISOString().split('T')[0],
       category: income.category,
       description: income.description,
-      image: null
+      image: income.image ? `/uploads/${income.image}` : null
     });
-
-    if (income.image) {
-      setSelectedImage(`/uploads/${income.image}`);
-    }
   };
 
   const handleUpdateIncome = async (event) => {
     event.preventDefault();
-
     if (selectedIncome) {
-      const formattedDate = new Date(formValues.date);
-
       try {
-        let updatedFormData = {
-          ...formValues,
-          date: formattedDate,
-        };  
-
-        if (formValues.image) {
-          updatedFormData.image = formValues.image;
-        }
-
-        await updateIncome(selectedIncome._id, updatedFormData);
-
+        const response = await updateIncome(selectedIncome._id, formValues);
+        dispatch({ type: 'UPDATE_INCOME', payload: response.data });
+        // Reset form
         setFormValues({
           title: '',
           amount: '',
@@ -131,15 +116,7 @@ const Income = ({ getFileInputRef }) => {
           description: '',
           image: null
         });
-
-        const fileInputRef = getFileInputRef(); // Get the fileInputRef from the Form component
-
-        if (fileInputRef.current) {
-          fileInputRef.current.value = ''; // Clear the file input value
-        }
-
         setFormMode("add");
-        setSelectedIncome(null);
       } catch (error) {
         console.error('Error updating income:', error);
       }
