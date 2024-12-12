@@ -93,6 +93,7 @@ export const GlobalProvider = ({ children }) => {
       }
   
       const updatedIncome = await response.json();
+      dispatch({ type: 'UPDATE_INCOME', payload: updatedIncome.data });
       return updatedIncome;
     } catch (error) {
       console.error('Error updating income:', error);
@@ -101,12 +102,26 @@ export const GlobalProvider = ({ children }) => {
   };
 
   // Action to update expense
-  const updateExpense = async (id, expenseData) => {
+  const updateExpense = async (id, updatedExpenseData) => {
     try {
-      const res = await axios.patch(`/api/v1/expenses/${id}`, expenseData);
-      dispatch({ type: 'UPDATE_EXPENSE', payload: res.data.data });
+      const response = await fetch(`/api/v1/expenses/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedExpenseData),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to update expense: ${response.status} ${response.statusText}`);
+      }
+  
+      const updatedExpense = await response.json();
+      dispatch({ type: 'UPDATE_EXPENSE', payload: updatedExpense.data });
+      return updatedExpense;
     } catch (error) {
-      dispatch({ type: 'TRANSACTION_ERROR', payload: error.response.data.error });
+      console.error('Error updating expense:', error);
+      throw error;
     }
   };
 

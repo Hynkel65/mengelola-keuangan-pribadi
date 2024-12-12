@@ -4,12 +4,18 @@ import expenseOptions from '../content/Expense';
 
 import '../style/Form.css'
 
-const Form = ({ handleSubmit, handleInputChange, handleUpdateIncome, formData, categoryOptions, categoryType, formMode, selectedImage }) => {
-  const isIncome = categoryType === "income";
-  const buttonText = formMode === "add" ? `Add ${isIncome ? "Income" : "Expense"}` : `Update ${isIncome ? "Income" : "Expense"}`;
-  
+const Form = ({ 
+  handleSubmit, 
+  handleInputChange, 
+  handleUpdate, 
+  formData, 
+  categoryOptions, 
+  formMode, 
+  selectedImage 
+}) => {
   const fileInputRef = useRef(null);
-  const getFileInputRef = () => fileInputRef;
+
+  const buttonText = formMode === "add" ? "Add" : "Update";
 
   const categories = Array.isArray(categoryOptions)
     ? categoryOptions
@@ -19,7 +25,7 @@ const Form = ({ handleSubmit, handleInputChange, handleUpdateIncome, formData, c
 
   return (
     <form 
-      onSubmit={formMode === 'add' ? handleSubmit : handleUpdateIncome}
+      onSubmit={formMode === 'add' ? handleSubmit : handleUpdate}
       encType='multipart/form-data'
     >
       <div>

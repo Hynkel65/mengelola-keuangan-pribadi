@@ -112,6 +112,11 @@ padding: 1rem;
   margin-right: 20px;
 }
 
+.expense-con .main-content .right-content .history-item-con .img-con img {
+  max-width: 100%;
+  height: auto;
+}
+
 .expense-con .main-content .right-content .history-item-con .history-title {
 font-size: 18px;
 font-weight: bold;

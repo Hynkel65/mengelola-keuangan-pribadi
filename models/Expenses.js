@@ -33,10 +33,6 @@ const expenseSchema = new mongoose.Schema({
         maxLength: 50
     },
     image: {
-        data: Buffer,
-        contentType: String,
-    },
-    image: {
         type: String,
         trim: true,
         required: false

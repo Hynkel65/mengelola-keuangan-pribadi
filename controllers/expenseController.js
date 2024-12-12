@@ -95,16 +95,19 @@ exports.deleteExpense= async (req, res, next) => {
 exports.updateExpense = async (req, res, next) => {
     try {
         const expense = await Expense.findById(req.params.id);
-
         if(!expense) {
             return res.status(404).json({
                 success: false,
-                error: 'No transaction found'
+                error: 'No expense found'
             });
         }
 
-        expense.text = req.body.text;
+        expense.title = req.body.title;
         expense.amount = req.body.amount;
+        expense.date = req.body.date;
+        expense.category = req.body.category;
+        expense.description = req.body.description;
+        
         await expense.save();
 
         return res.status(200).json({

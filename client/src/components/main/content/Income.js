@@ -105,8 +105,21 @@ const Income = ({ getFileInputRef }) => {
     event.preventDefault();
     if (selectedIncome) {
       try {
-        const response = await updateIncome(selectedIncome._id, formValues);
-        dispatch({ type: 'UPDATE_INCOME', payload: response.data });
+        const formattedDate = new Date(formValues.date);
+        let updatedFormData = {
+          title: formValues.title,
+          amount: formValues.amount,
+          date: formattedDate.toISOString(),
+          category: formValues.category,
+          description: formValues.description,
+        };
+  
+        if (formValues.image) {
+          updatedFormData.image = formValues.image;
+        }
+  
+        await updateIncome(selectedIncome._id, updatedFormData);
+  
         // Reset form
         setFormValues({
           title: '',
@@ -114,12 +127,20 @@ const Income = ({ getFileInputRef }) => {
           date: '',
           category: '',
           description: '',
-          image: null
+          image: null,
         });
+  
         setFormMode("add");
+        setSelectedIncome(null);
+
+        alert('Income data has been successfully updated.');
+
       } catch (error) {
         console.error('Error updating income:', error);
+        alert('Failed to update income. Please try again.');
       }
+    } else {
+      console.error('No income selected for update');
     }
   };
 
@@ -150,7 +171,7 @@ const Income = ({ getFileInputRef }) => {
         <Form 
           handleSubmit={handleSubmit}
           handleInputChange={handleInputChange}
-          handleUpdateIncome={handleUpdateIncome}
+          handleUpdate={handleUpdateIncome}
           formData={formValues} 
           categoryOptions={incomeOptions}
           categoryType="income"
@@ -165,7 +186,7 @@ const Income = ({ getFileInputRef }) => {
               <div className="history-item-details">
                 <div className="img-con" onClick={() => handleImgClick(income.image)}>
                   {income.image && (
-                    <img src={`/uploads/${income.image}`} alt="Income" />
+                    <img src={`/uploads/${income.image}`} alt="Income" class="center"/>
                   )}
                 </div>
                 <div className="info">

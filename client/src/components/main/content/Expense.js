@@ -83,41 +83,56 @@ const Expense = () => {
     setSelectedExpense(expense);
     setFormValues({
       title: expense.title,
-      amount: expense.category,
+      amount: expense.amount,
       date: new Date(expense.date).toISOString().split('T')[0],
       category: expense.category,
-      description: expense.description
+      description: expense.description,
+      image: expense.image ? `/uploads/${expense.image}` : null
     })
   }
 
   const handleUpdateExpense = async (event) => {
     event.preventDefault();
-
     if (selectedExpense) {
-      const formattedDate = new Date(formValues.date);
-
       try {
-        await updateExpense(selectedExpense._id, {
-          ...formValues,
-          date: formattedDate
-        });
-
+        const formattedDate = new Date(formValues.date);
+        let updatedFormData = {
+          title: formValues.title,
+          amount: formValues.amount,
+          date: formattedDate.toISOString(),
+          category: formValues.category,
+          description: formValues.description,
+        };
+  
+        if (formValues.image) {
+          updatedFormData.image = formValues.image;
+        }
+  
+        await updateExpense(selectedExpense._id, updatedFormData);
+  
+        // Reset form
         setFormValues({
-          title:'',
+          title: '',
           amount: '',
           date: '',
           category: '',
           description: '',
-          image: null
+          image: null,
         });
-
+  
         setFormMode("add");
         setSelectedExpense(null);
+
+        alert('Expense data has been successfully updated.');
+
       } catch (error) {
-        console.error('Error updating expense:', error)
+        console.error('Error updating expense:', error);
+        alert('Failed to update expense. Please try again.');
       }
+    } else {
+      console.error('No expense selected for update');
     }
-  }
+  };
 
   const recentExpenseData = expenses.slice(-4);
 
@@ -146,7 +161,7 @@ const Expense = () => {
         <Form 
           handleSubmit={handleSubmit}
           handleInputChange={handleInputChange}
-          handleUpdateExpense={handleUpdateExpense}
+          handleUpdate={handleUpdateExpense}
           formData={formValues} 
           categoryOptions={expenseOptions}
           categoryType="expense"
@@ -161,7 +176,7 @@ const Expense = () => {
               <div className="history-item-details">
               <div className="img-con" onClick={() => handleImgClick(expense.image)}>
                 {expense.image && (
-                  <img src={`/uploads/${expense.image}`} alt="Expense" />
+                  <img src={`/uploads/${expense.image}`} alt="Expense" class="center"/>
                 )}
               </div>
                 <div className="info">
