@@ -1,53 +1,44 @@
 .view-transactions-con {
-  display: block;
   padding: 20px;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: #191d2b;
-  color: #fff;
 }
 
-.view-transactions-con .view-transactions-heading {
-  font-size: 48px;
+.view-transactions-con .img-con {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 3rem;
-  color: #45a1d6;
-  text-transform: uppercase;
+  margin-right: 20px;
 }
 
-.view-transactions-con .view-transactions-table-con {
-  width: 100%;
+.filter-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.view-income-table,
-.view-expenses-table {
-  width: 100%; /* Set the width to 100% to fill the container */
-  border-collapse: collapse; /* Collapse borders to avoid double borders */
-  margin-bottom: 20px; /* Add some margin to separate the tables */
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.view-income-table th,
-.view-income-table td,
-.view-expenses-table th,
-.view-expenses-table td {
-  border: 1px solid #ddd; /* Add a 1px solid border with a light gray color */
-  padding: 8px; /* Add some padding to the cells for better spacing */
+.transactions-table th, .transactions-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  cursor: pointer;
 }
 
-.view-income-table th,
-.view-expenses-table th {
-  background-color: #202d41; /* Add a background color to the table headers */
+.transactions-table th:hover {
+  background-color: #f0f0f0;
 }
 
-.action {
-    display: flex;
-    gap: 5px;
-    justify-content: center;
+.txn-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
 }

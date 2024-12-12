@@ -186,7 +186,7 @@ const Income = ({ getFileInputRef }) => {
               <div className="history-item-details">
                 <div className="img-con" onClick={() => handleImgClick(income.image)}>
                   {income.image && (
-                    <img src={`/uploads/${income.image}`} alt="Income" class="center"/>
+                    <img src={`/uploads/${income.image}`} alt="Income"/>
                   )}
                 </div>
                 <div className="info">

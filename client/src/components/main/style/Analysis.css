@@ -48,3 +48,26 @@
   box-shadow: var(--box-shadow); /* Apply the box-shadow variable defined in App.css */
   margin-bottom: 2rem;
 }
+
+.analysis-con {
+  padding: 20px;
+}
+
+.analysis-heading {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.analysis-item {
+  margin-bottom: 20px;
+}
+
+.charts {
+  display: flex;
+  gap: 20px;
+}
+
+.chart {
+  flex: 1;
+  text-align: center;
+}
