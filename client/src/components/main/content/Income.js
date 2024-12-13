@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import Form from '../layout/Form';
 import moneyFormatter from '../utils/MoneyFormatter';
 import DeleteConfirmationModal from '../utils/DeleteConfirmationModal';
@@ -7,14 +7,13 @@ import ImageModal from '../utils/ImageModal';
 import '../style/Income.css'
 import { GlobalContext } from '../../context/GlobalState';
 
-const Income = ({ getFileInputRef }) => {
+const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
   const { incomes, addIncome, deleteIncome, updateIncome } = useContext(GlobalContext);
 
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [incomeToDelete, setIncomeToDelete] = useState(null);
 
   const [formMode, setFormMode] = useState("add");
-  const [selectedIncome, setSelectedIncome] = useState(null);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -33,6 +32,20 @@ const Income = ({ getFileInputRef }) => {
     description: '',
     image: null
   });
+
+  useEffect(() => {
+    if (selectedIncome) {
+      setFormMode("update");
+      setFormValues({
+        title: selectedIncome.title,
+        amount: selectedIncome.amount,
+        date: new Date(selectedIncome.date).toISOString().split('T')[0],
+        category: selectedIncome.category,
+        description: selectedIncome.description,
+        image: selectedIncome.image ? `/uploads/${selectedIncome.image}` : null,
+      });
+    }
+  }, [selectedIncome]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -144,7 +157,7 @@ const Income = ({ getFileInputRef }) => {
     }
   };
 
-  const recentIncomeData = incomes.slice(-4);
+  const recentIncomeData = incomes.slice(-4).reverse();
 
   // Define the category options for Income
   const incomeOptions = [
@@ -158,7 +171,15 @@ const Income = ({ getFileInputRef }) => {
     { value: 'other', label: 'Other' },
   ];
 
-  const totalIncome = incomes.reduce((total, income) => total + parseFloat(income.amount), 0);
+  const currentDate = new Date();
+  const totalIncome = incomes.reduce((total, income) => {
+    const incomeDate = new Date(income.date);
+    if (incomeDate.getMonth() === currentDate.getMonth() && 
+        incomeDate.getFullYear() === currentDate.getFullYear()) {
+      return total + parseFloat(income.amount);
+    }
+    return total;
+  }, 0);
 
   return (
     <div className="income-con">
@@ -200,7 +221,7 @@ const Income = ({ getFileInputRef }) => {
                         year: 'numeric',
                       })}
                     </span>
-                    <span className="description">{income.description}</span>
+                    <span className="category">{income.category}</span>
                   </div>
                 </div>
                 <div className="edit">

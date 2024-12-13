@@ -84,8 +84,6 @@ const Analysis = () => {
 
   return (
     <div className="analysis-con">
-      <div className="analysis-heading">Analysis</div>
-
       {/* Monthly Averages */}
       <div className="analysis-item">
         <h3>Monthly Averages</h3>
@@ -98,11 +96,11 @@ const Analysis = () => {
       <div className="charts">
         <div className="chart">
           <h4>Income Categories</h4>
-          <Doughnut data={incomeChartData} />
+          <Doughnut data={incomeChartData} options={{plugins: {legend: {labels: {color: 'white'}}}}}/>
         </div>
         <div className="chart">
           <h4>Expense Categories</h4>
-          <Doughnut data={expenseChartData} />
+          <Doughnut data={expenseChartData} options={{plugins: {legend: {labels: {color: 'white'}}}}}/>
         </div>
       </div>
 

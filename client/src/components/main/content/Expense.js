@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import Form from '../layout/Form';
 import moneyFormatter from '../utils/MoneyFormatter';
 import DeleteConfirmationModal from '../utils/DeleteConfirmationModal'
@@ -7,14 +7,13 @@ import ImageModal from '../utils/ImageModal';
 import '../style/Expense.css'
 import { GlobalContext } from '../../context/GlobalState';
 
-const Expense = () => {
+const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
   const { expenses, addExpense, deleteExpense, updateExpense } = useContext(GlobalContext);
   
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState(null);
 
   const [formMode, setFormMode] = useState("add");
-  const [selectedExpense, setSelectedExpense] = useState(null);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -32,6 +31,20 @@ const Expense = () => {
     category: '',
     description: '',
   });
+
+  useEffect(() => {
+    if (selectedExpense) {
+      setFormMode("update");
+      setFormValues({
+        title: selectedExpense.title,
+        amount: selectedExpense.amount,
+        date: new Date(selectedExpense.date).toISOString().split('T')[0],
+        category: selectedExpense.category,
+        description: selectedExpense.description,
+        image: selectedExpense.image ? `/uploads/${selectedExpense.image}` : null,
+      });
+    }
+  }, [selectedExpense]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -57,9 +70,17 @@ const Expense = () => {
         description: '',
         image: null
       });
+
+      const fileInputRef = getFileInputRef(); // Get the fileInputRef from the Form component
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Clear the file input value
+      }
     } catch (error) {
       console.error('Error adding expense:', error)
     }
+
+    setSelectedImage(null);
   };
 
   const handleInputChange = (event) => {
@@ -134,7 +155,7 @@ const Expense = () => {
     }
   };
 
-  const recentExpenseData = expenses.slice(-4);
+  const recentExpenseData = expenses.slice(-4).reverse();
 
   // Define the category options for expense
   const expenseOptions = [
@@ -148,7 +169,15 @@ const Expense = () => {
     { value: 'others', label: 'Others' },
   ];
 
-  const totalExpense = expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0);
+  const currentDate = new Date();
+  const totalExpense = expenses.reduce((total, expense) => {
+    const expenseDate = new Date(expense.date);
+    if (expenseDate.getMonth() === currentDate.getMonth() && 
+    expenseDate.getFullYear() === currentDate.getFullYear()) {
+      return total + parseFloat(expense.amount);
+    }
+    return total;
+  }, 0);
 
   return (
     <div className="expense-con">
@@ -176,7 +205,7 @@ const Expense = () => {
               <div className="history-item-details">
               <div className="img-con" onClick={() => handleImgClick(expense.image)}>
                 {expense.image && (
-                  <img src={`/uploads/${expense.image}`} alt="Expense" class="center"/>
+                  <img src={`/uploads/${expense.image}`} alt="Expense"/>
                 )}
               </div>
                 <div className="info">
@@ -190,7 +219,7 @@ const Expense = () => {
                         year: 'numeric',
                       })}
                     </span>
-                    <span className="description">{expense.description}</span>
+                    <span className="category">{expense.category}</span>
                   </div>
                 </div>
                 <div className="edit">

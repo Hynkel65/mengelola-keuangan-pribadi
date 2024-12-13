@@ -18,6 +18,13 @@ function Main() {
     setActiveButton(buttonName);
   };
 
+  const [selectedIncome, setSelectedIncome] = useState(null);
+  const [selectedExpense, setSelectedExpense] = useState(null);
+
+  const navigateTo = (tabName) => {
+    setActiveButton(tabName);
+  };
+
   const handleSignOut = () => {
     console.log('User signed out.');
   };
@@ -32,9 +39,25 @@ function Main() {
         <div className="right-con">
           {activeButton === 'dashboard' && <Dashboard />}
           {activeButton === 'analysis' && <Analysis />}
-          {activeButton === 'view-transaction' && <ViewTransaction />}
-          {activeButton === 'income' && <Income />}
-          {activeButton === 'expense' && <Expense />}
+          {activeButton === 'view-transaction' && (
+            <ViewTransaction
+              setSelectedIncome={setSelectedIncome}
+              setSelectedExpense={setSelectedExpense}
+              navigateTo={navigateTo}
+            />
+          )}
+          {activeButton === 'income' && (
+            <Income
+              selectedIncome={selectedIncome}
+              setSelectedIncome={setSelectedIncome}
+            />
+          )}
+          {activeButton === 'expense' && (
+            <Expense
+              selectedExpense={selectedExpense}
+              setSelectedExpense={setSelectedExpense}
+            />
+          )}
         </div>
       </div>
   );
