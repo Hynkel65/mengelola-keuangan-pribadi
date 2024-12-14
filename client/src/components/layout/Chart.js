@@ -13,7 +13,7 @@ import {Chart as ChartJs,
 import { Line } from 'react-chartjs-2';
 
 import '../style/Chart.css';
-import { GlobalContext } from '../../context/GlobalState';
+import { GlobalContext } from '../context/GlobalState';
 
 ChartJs.register(
     CategoryScale,

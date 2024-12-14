@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import moneyFormatter from '../utils/MoneyFormatter';
 
 import '../style/History.css';
-import { GlobalContext } from '../../context/GlobalState';
+import { GlobalContext } from '../context/GlobalState';
 
 function History() {
   const { incomes, expenses } = useContext(GlobalContext);

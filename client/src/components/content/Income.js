@@ -1,17 +1,17 @@
 import React, { useEffect, useContext, useState } from 'react';
 import Form from '../layout/Form';
 import moneyFormatter from '../utils/MoneyFormatter';
-import DeleteConfirmationModal from '../utils/DeleteConfirmationModal'
+import DeleteConfirmationModal from '../utils/DeleteConfirmationModal';
 import ImageModal from '../utils/ImageModal';
 
-import '../style/Expense.css'
-import { GlobalContext } from '../../context/GlobalState';
+import '../style/Income.css'
+import { GlobalContext } from '../context/GlobalState';
 
-const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
-  const { expenses, addExpense, deleteExpense, updateExpense } = useContext(GlobalContext);
-  
+const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
+  const { incomes, addIncome, deleteIncome, updateIncome } = useContext(GlobalContext);
+
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [expenseToDelete, setExpenseToDelete] = useState(null);
+  const [incomeToDelete, setIncomeToDelete] = useState(null);
 
   const [formMode, setFormMode] = useState("add");
 
@@ -30,21 +30,22 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
     date: '',
     category: '',
     description: '',
+    image: null
   });
 
   useEffect(() => {
-    if (selectedExpense) {
+    if (selectedIncome) {
       setFormMode("update");
       setFormValues({
-        title: selectedExpense.title,
-        amount: selectedExpense.amount,
-        date: new Date(selectedExpense.date).toISOString().split('T')[0],
-        category: selectedExpense.category,
-        description: selectedExpense.description,
-        image: selectedExpense.image ? `/uploads/${selectedExpense.image}` : null,
+        title: selectedIncome.title,
+        amount: selectedIncome.amount,
+        date: new Date(selectedIncome.date).toISOString().split('T')[0],
+        category: selectedIncome.category,
+        description: selectedIncome.description,
+        image: selectedIncome.image ? `/uploads/${selectedIncome.image}` : null,
       });
     }
-  }, [selectedExpense]);
+  }, [selectedIncome]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -58,10 +59,11 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
       formData.append('date', formattedDate.toISOString());
       formData.append('category', formValues.category);
       formData.append('description', formValues.description);
-      formData.append('image', formValues.image); // Append the File object
+      formData.append('image', formValues.image);
   
-      await addExpense(formData); // Send the FormData object
+      await addIncome(formData);
 
+      // Clear the values
       setFormValues({
         title: '',
         amount: '',
@@ -77,7 +79,7 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
         fileInputRef.current.value = ''; // Clear the file input value
       }
     } catch (error) {
-      console.error('Error adding expense:', error)
+      console.error('Error adding income:', error);
     }
 
     setSelectedImage(null);
@@ -85,11 +87,11 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
 
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
-
+  
     if (type === 'file') {
       setFormValues({
         ...formValues,
-        [name]: files[0], // Store the File object
+        image: files[0],
       });
     } else {
       setFormValues({
@@ -99,22 +101,22 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
     }
   };
 
-  const handleEditExpense = (expense) => {
+  const handleEditIncome = (income) => {
     setFormMode("update");
-    setSelectedExpense(expense);
+    setSelectedIncome(income);
     setFormValues({
-      title: expense.title,
-      amount: expense.amount,
-      date: new Date(expense.date).toISOString().split('T')[0],
-      category: expense.category,
-      description: expense.description,
-      image: expense.image ? `/uploads/${expense.image}` : null
-    })
-  }
+      title: income.title,
+      amount: income.amount,
+      date: new Date(income.date).toISOString().split('T')[0],
+      category: income.category,
+      description: income.description,
+      image: income.image ? `/uploads/${income.image}` : null
+    });
+  };
 
-  const handleUpdateExpense = async (event) => {
+  const handleUpdateIncome = async (event) => {
     event.preventDefault();
-    if (selectedExpense) {
+    if (selectedIncome) {
       try {
         const formattedDate = new Date(formValues.date);
         let updatedFormData = {
@@ -129,7 +131,7 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
           updatedFormData.image = formValues.image;
         }
   
-        await updateExpense(selectedExpense._id, updatedFormData);
+        await updateIncome(selectedIncome._id, updatedFormData);
   
         // Reset form
         setFormValues({
@@ -142,92 +144,92 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
         });
   
         setFormMode("add");
-        setSelectedExpense(null);
+        setSelectedIncome(null);
 
-        alert('Expense data has been successfully updated.');
+        alert('Income data has been successfully updated.');
 
       } catch (error) {
-        console.error('Error updating expense:', error);
-        alert('Failed to update expense. Please try again.');
+        console.error('Error updating income:', error);
+        alert('Failed to update income. Please try again.');
       }
     } else {
-      console.error('No expense selected for update');
+      console.error('No income selected for update');
     }
   };
 
-  const recentExpenseData = expenses.slice(-4).reverse();
+  const recentIncomeData = incomes.slice(-4).reverse();
 
-  // Define the category options for expense
-  const expenseOptions = [
-    { value: 'education', label: 'Education' },
-    { value: 'groceries', label: 'Groceries' },
-    { value: 'health', label: 'Health' },
-    { value: 'subscriptions', label: 'Subscriptions' },
-    { value: 'takeaways', label: 'Takeaways' },
-    { value: 'clothing', label: 'Clothing' },
-    { value: 'traveling', label: 'Taveling' },
-    { value: 'others', label: 'Others' },
+  // Define the category options for Income
+  const incomeOptions = [
+    { value: 'salary', label: 'Salary' },
+    { value: 'freelancing', label: 'Freelancing' },
+    { value: 'investments', label: 'Investments' },
+    { value: 'stocks', label: 'Stocks' },
+    { value: 'bitcoin', label: 'Bitcoin' },
+    { value: 'bank', label: 'Bank Transfer' },
+    { value: 'youtube', label: 'Youtube' },
+    { value: 'other', label: 'Other' },
   ];
 
   const currentDate = new Date();
-  const totalExpense = expenses.reduce((total, expense) => {
-    const expenseDate = new Date(expense.date);
-    if (expenseDate.getMonth() === currentDate.getMonth() && 
-    expenseDate.getFullYear() === currentDate.getFullYear()) {
-      return total + parseFloat(expense.amount);
+  const totalIncome = incomes.reduce((total, income) => {
+    const incomeDate = new Date(income.date);
+    if (incomeDate.getMonth() === currentDate.getMonth() && 
+        incomeDate.getFullYear() === currentDate.getFullYear()) {
+      return total + parseFloat(income.amount);
     }
     return total;
   }, 0);
 
   return (
-    <div className="expense-con">
-      <h2 className="expense-heading">EXPENSE</h2>
-      <div className="total-expense-con">
-        <p className="total-expense-text">{moneyFormatter(totalExpense)}</p>
+    <div className="income-con">
+      <h2 className="income-heading">INCOME</h2>
+      <div className="total-income-con">
+        <p className="total-income-text">{moneyFormatter(totalIncome)}</p>
       </div>
       <div className="main-content">
         <div className="left-content">
         <Form 
           handleSubmit={handleSubmit}
           handleInputChange={handleInputChange}
-          handleUpdate={handleUpdateExpense}
+          handleUpdate={handleUpdateIncome}
           formData={formValues} 
-          categoryOptions={expenseOptions}
-          categoryType="expense"
+          categoryOptions={incomeOptions}
+          categoryType="income"
           formMode={formMode}
-          selectedData={selectedExpense}
+          selectedData={selectedIncome}
         />
         </div>
         <div className="right-content">
-          <h3 className="history-heading">Recent Expenses</h3>
-          {recentExpenseData.map((expense) => (
-            <div key={expense._id} className="history-item-con">
+          <h3 className="history-heading">Recent Incomes</h3>
+          {recentIncomeData.map((income) => (
+            <div key={income._id} className="history-item-con">
               <div className="history-item-details">
-              <div className="img-con" onClick={() => handleImgClick(expense.image)}>
-                {expense.image && (
-                  <img src={`/uploads/${expense.image}`} alt="Expense"/>
-                )}
-              </div>
+                <div className="img-con" onClick={() => handleImgClick(income.image)}>
+                  {income.image && (
+                    <img src={`/uploads/${income.image}`} alt="Income"/>
+                  )}
+                </div>
                 <div className="info">
-                  <div className="history-title">{expense.title}</div>
+                  <div className="history-title">{income.title}</div>
                   <div className="history-info">
-                    <span className="amount">{moneyFormatter(expense.amount)}</span>
+                    <span className="amount">{moneyFormatter(income.amount)}</span>
                     <span className="date">
-                      {new Date(expense.date).toLocaleDateString('en-US', {
+                      {new Date(income.date).toLocaleDateString('en-US', {
                         day: '2-digit',
                         month: 'long',
                         year: 'numeric',
                       })}
                     </span>
-                    <span className="category">{expense.category}</span>
+                    <span className="category">{income.category}</span>
                   </div>
                 </div>
                 <div className="edit">
-                  <span className="edit-btn" onClick={() => handleEditExpense(expense)}>EDIT</span>
+                  <span className="edit-btn" onClick={() => handleEditIncome(income)}>EDIT</span>
                 </div>
                 <div className="delete">
                   <span className="delete-btn" onClick={() => {
-                    setExpenseToDelete(expense);
+                    setIncomeToDelete(income);
                     setShowDeleteConfirmation(true);
                   }}>X</span>
                 </div>
@@ -242,9 +244,9 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
         show={showDeleteConfirmation}
         onClose={() => setShowDeleteConfirmation(false)}
         onDelete={() => {
-          if (expenseToDelete) {
-            deleteExpense(expenseToDelete._id);
-            setExpenseToDelete(null);
+          if (incomeToDelete) {
+            deleteIncome(incomeToDelete._id);
+            setIncomeToDelete(null);
             setShowDeleteConfirmation(false);
           }
         }}
@@ -253,4 +255,4 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
   );
 };
 
-export default Expense;
+export default Income;

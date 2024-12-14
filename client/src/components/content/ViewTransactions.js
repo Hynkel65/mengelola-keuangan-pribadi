@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import "../style/ViewTransactions.css";
 import moneyFormatter from '../utils/MoneyFormatter';
-import { GlobalContext } from "../../context/GlobalState";
+import { GlobalContext } from "../context/GlobalState";
 import ImageModal from "../utils/ImageModal";
 import DeleteConfirmationModal from '../utils/DeleteConfirmationModal';
 

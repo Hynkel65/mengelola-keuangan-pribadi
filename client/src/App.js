@@ -1,7 +1,7 @@
 import React from 'react';
 import { GlobalProvider } from './components/context/GlobalState';
 
-import Main from './components/main/Main'
+import Main from './components/Main'
 
 function App() {
   return (

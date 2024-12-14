@@ -4,7 +4,7 @@ import History from '../layout/History';
 import moneyFormatter from '../utils/MoneyFormatter';
 
 import '../style/Dashboard.css';
-import { GlobalContext } from '../../context/GlobalState';
+import { GlobalContext } from '../context/GlobalState';
 
 const Dashboard = () => {
   const { incomes, expenses } = useContext(GlobalContext);

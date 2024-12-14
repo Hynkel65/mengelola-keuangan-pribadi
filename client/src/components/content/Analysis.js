@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Doughnut } from "react-chartjs-2";
-import { GlobalContext } from "../../context/GlobalState";
+import { GlobalContext } from "../context/GlobalState";
 import moneyFormatter from "../utils/MoneyFormatter";
 import "../style/Analysis.css";
 
