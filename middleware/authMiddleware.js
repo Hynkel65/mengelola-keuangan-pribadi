@@ -1,35 +1,33 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// Middleware to check if the user is authenticated
 const requireAuth = async (req, res, next) => {
-    console.log('Checking authentication...'); // Log when the middleware is invoked
+    // Retrieve token from cookies
+    const token = req.cookies.jwt;
 
-    // Get the token from the cookies
-    const token = req.cookies.jwt; 
-    console.log('Token from cookies:', token); // Log the token
-
+    // If no token is found, return an unauthorized error
     if (!token) {
-        console.log('No token found. User is unauthorized.'); // Log if no token is found
         return res.status(401).json({ success: false, error: 'Unauthorized: Token not found' });
     }
 
     try {
-        // Verify the token
+        // Verify the token using the secret key
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
-        console.log('Decoded token:', decodedToken); // Log the decoded token
 
-        // Find the user associated with the token
+        // Find the user by ID from the decoded token
         req.user = await User.findById(decodedToken.id);
-        console.log('User  found:', req.user); // Log the user found
 
+        // If no user is found, return an unauthorized error
         if (!req.user) {
-            console.log('User  not found.'); // Log if user is not found
             return res.status(401).json({ success: false, error: 'Unauthorized: User not found' });
         }
 
-        next(); // Proceed to the next middleware or route handler
+        // Proceed to the next middleware or route handler
+        next();
     } catch (error) {
-        console.error('Error verifying token:', error); // Log any errors during verification
+        // Log the error and return an unauthorized error if token verification fails
+        console.error('Error verifying token:', error);
         res.status(401).json({ success: false, error: 'Unauthorized: Invalid token' });
     }
 };

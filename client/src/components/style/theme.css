@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+
+:root {
+    --primary-color: #00A2FF;
+    --secondary-color: #6c757d;
+    --font-family: 'roboto', sans-serif;
+    --font-size-1: 48px;
+    --font-size-2: 36px;
+    --font-size-3: 24px;
+    --font-size-4: 16px;
+    --border-radius: 15px;
+    --background-color-1: #191d2b;
+    --background-color-2: #304a6e;
+    --background-color-3: #2d4669;
+    --background-color-4: #272d43;
+    --white: #fff;
+    --button-hover-color: #0382cc;
+    --error-color: red;
+    --income-color: #55efc4;
+    --expense-color: #d63031;
+    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
+}

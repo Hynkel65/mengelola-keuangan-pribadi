@@ -1,37 +1,37 @@
 import React, { useEffect, useContext, useState } from 'react';
 import Form from '../layout/Form';
 import moneyFormatter from '../utils/MoneyFormatter';
-import DeleteConfirmationModal from '../utils/DeleteConfirmationModal'
+import DeleteConfirmationModal from '../utils/DeleteConfirmationModal';
 import ImageModal from '../utils/ImageModal';
-
-import '../style/Expense.css'
+import '../style/Expense.css';
 import { GlobalContext } from '../context/GlobalState';
 
-const Expense = ({ selectedExpense , setSelectedExpense }) => {
+const Expense = ({ selectedExpense, setSelectedExpense }) => {
+  // Global context for managing expenses
   const { expenses, addExpense, deleteExpense, updateExpense } = useContext(GlobalContext);
-  
+
+  // State variables
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState(null);
-
   const [formMode, setFormMode] = useState("add");
-
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleImgClick = (image) => {
-    setSelectedImage(image);
-    setShowModal(true);
-  };
-
-  // Placeholder data and state for the form
   const [formValues, setFormValues] = useState({
     title: '',
     amount: '',
     date: '',
     category: '',
     description: '',
+    image: null,
   });
 
+  // Handle image click to show in modal
+  const handleImgClick = (image) => {
+    setSelectedImage(image);
+    setShowModal(true);
+  };
+
+  // Effect hook to update form values when a selected expense changes
   useEffect(() => {
     if (selectedExpense) {
       setFormMode("update");
@@ -46,9 +46,9 @@ const Expense = ({ selectedExpense , setSelectedExpense }) => {
     }
   }, [selectedExpense]);
 
+  // Handle form submission for adding a new expense
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const formattedDate = new Date(formValues.date);
 
     try {
@@ -58,41 +58,26 @@ const Expense = ({ selectedExpense , setSelectedExpense }) => {
       formData.append('date', formattedDate.toISOString());
       formData.append('category', formValues.category);
       formData.append('description', formValues.description);
-      formData.append('image', formValues.image); // Append the File object
-  
-      await addExpense(formData); // Send the FormData object
+      formData.append('image', formValues.image);
 
-      setFormValues({
-        title: '',
-        amount: '',
-        date: '',
-        category: '',
-        description: '',
-        image: null
-      });
+      await addExpense(formData);
+      resetFormValues();
     } catch (error) {
-      console.error('Error adding expense:', error)
+      console.error('Error adding expense:', error);
     }
-
     setSelectedImage(null);
   };
 
+  // Handle input changes in the form
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
-
-    if (type === 'file') {
-      setFormValues({
-        ...formValues,
-        [name]: files[0], // Store the File object
-      });
-    } else {
-      setFormValues({
-        ...formValues,
-        [name]: value,
-      });
-    }
+    setFormValues({
+      ...formValues,
+      [name]: type === 'file' ? files[0] : value,
+    });
   };
 
+  // Handle editing an existing expense
   const handleEditExpense = (expense) => {
     setFormMode("update");
     setSelectedExpense(expense);
@@ -102,106 +87,103 @@ const Expense = ({ selectedExpense , setSelectedExpense }) => {
       date: new Date(expense.date).toISOString().split('T')[0],
       category: expense.category,
       description: expense.description,
-      image: expense.image ? `/uploads/${expense.image}` : null
-    })
-  }
+      image: expense.image ? `/uploads/${expense.image}` : null,
+    });
+  };
 
+  // Handle updating an existing expense
   const handleUpdateExpense = async (event) => {
     event.preventDefault();
-    if (selectedExpense) {
-      try {
-        const formattedDate = new Date(formValues.date);
-        let updatedFormData = {
-          title: formValues.title,
-          amount: formValues.amount,
-          date: formattedDate.toISOString(),
-          category: formValues.category,
-          description: formValues.description,
-        };
-  
-        if (formValues.image) {
-          updatedFormData.image = formValues.image;
-        }
-  
-        await updateExpense(selectedExpense._id, updatedFormData);
-  
-        // Reset form
-        setFormValues({
-          title: '',
-          amount: '',
-          date: '',
-          category: '',
-          description: '',
-          image: null,
-        });
-  
-        setFormMode("add");
-        setSelectedExpense(null);
-
-        alert('Expense data has been successfully updated.');
-
-      } catch (error) {
-        console.error('Error updating expense:', error);
-        alert('Failed to update expense. Please try again.');
-      }
-    } else {
+    if (!selectedExpense) {
       console.error('No expense selected for update');
+      return;
+    }
+
+    try {
+      const formattedDate = new Date(formValues.date);
+      const updatedFormData = {
+        title: formValues.title,
+        amount: formValues.amount,
+        date: formattedDate.toISOString(),
+        category: formValues.category,
+        description: formValues.description,
+        image: formValues.image,
+      };
+
+      await updateExpense(selectedExpense._id, updatedFormData);
+      resetFormValues();
+      setFormMode("add");
+      setSelectedExpense(null);
+      alert('Expense data has been successfully updated.');
+    } catch (error) {
+      console.error('Error updating expense:', error);
+      alert('Failed to update expense. Please try again.');
     }
   };
 
+  // Function to reset form values
+  const resetFormValues = () => {
+    setFormValues({
+      title: '',
+      amount: '',
+      date: '',
+      category: '',
+      description: '',
+      image: null,
+    });
+  };
+
+  // Get recent expenses and calculate the total expense for the current month
   const recentExpenseData = expenses.slice(-4).reverse();
-
-  // Define the category options for expense
-  const expenseOptions = [
-    { value: 'education', label: 'Education' },
-    { value: 'groceries', label: 'Groceries' },
-    { value: 'health', label: 'Health' },
-    { value: 'subscriptions', label: 'Subscriptions' },
-    { value: 'takeaways', label: 'Takeaways' },
-    { value: 'clothing', label: 'Clothing' },
-    { value: 'traveling', label: 'Taveling' },
-    { value: 'others', label: 'Others' },
-  ];
-
   const currentDate = new Date();
   const totalExpense = expenses.reduce((total, expense) => {
     const expenseDate = new Date(expense.date);
-    if (expenseDate.getMonth() === currentDate.getMonth() && 
-    expenseDate.getFullYear() === currentDate.getFullYear()) {
-      return total + parseFloat(expense.amount);
-    }
-    return total;
+    return (expenseDate.getMonth() === currentDate.getMonth() &&
+      expenseDate.getFullYear() === currentDate.getFullYear())
+      ? total + parseFloat(expense.amount)
+      : total;
   }, 0);
+
+// Expense category options
+const expenseOptions = [
+  { value: 'basic_needs', label: 'Kebutuhan Pokok' },
+  { value: 'education', label: 'Pendidikan' },
+  { value: 'entertainment', label: 'Hiburan' },
+  { value: 'social', label: 'Sosial' },
+  { value: 'finance', label: 'Keuangan' },
+  { value: 'unexpected_expenses', label: 'Pengeluaran Tidak Terduga' },
+];
 
   return (
     <div className="expense-con">
-      <h2 className="expense-heading">EXPENSE</h2>
+      <h1>Pengeluaran</h1>
       <div className="total-expense-con">
-        <p className="total-expense-text">{moneyFormatter(totalExpense)}</p>
+        <h2>Pengeluaran Bulan Ini</h2>
+        <h3 className="total-expense-text">{moneyFormatter(totalExpense)}</h3>
       </div>
       <div className="main-content">
         <div className="left-content">
-        <Form 
-          handleSubmit={handleSubmit}
-          handleInputChange={handleInputChange}
-          handleUpdate={handleUpdateExpense}
-          formData={formValues} 
-          categoryOptions={expenseOptions}
-          categoryType="expense"
-          formMode={formMode}
-          selectedData={selectedExpense}
-        />
+          <Form
+            handleSubmit={handleSubmit}
+            handleInputChange={handleInputChange}
+            handleUpdate={handleUpdateExpense}
+            formData={formValues}
+            categoryOptions={expenseOptions}
+            categoryType="expense"
+            formMode={formMode}
+            selectedData={selectedExpense}
+          />
         </div>
         <div className="right-content">
-          <h3 className="history-heading">Recent Expenses</h3>
+          <h3>Pengeluaran Terkini</h3>
           {recentExpenseData.map((expense) => (
             <div key={expense._id} className="history-item-con">
               <div className="history-item-details">
-              <div className="img-con" onClick={() => handleImgClick(expense.image)}>
-                {expense.image && (
-                  <img src={`/uploads/${expense.image}`} alt="Expense"/>
-                )}
-              </div>
+                <div className="img-con" onClick={() => handleImgClick(expense.image)}>
+                  {expense.image && (
+                    <img src={`/uploads/${expense.image}`} alt="Expense" />
+                  )}
+                </div>
                 <div className="info">
                   <div className="history-title">{expense.title}</div>
                   <div className="history-info">
@@ -217,13 +199,15 @@ const Expense = ({ selectedExpense , setSelectedExpense }) => {
                   </div>
                 </div>
                 <div className="edit">
-                  <span className="edit-btn" onClick={() => handleEditExpense(expense)}>EDIT</span>
+                  <button className="edit-btn" onClick={() => handleEditExpense(expense)}>
+                    EDIT
+                  </button>
                 </div>
                 <div className="delete">
-                  <span className="delete-btn" onClick={() => {
+                  <button className="delete-btn" onClick={() => {
                     setExpenseToDelete(expense);
                     setShowDeleteConfirmation(true);
-                  }}>X</span>
+                  }}>X</button>
                 </div>
               </div>
             </div>
@@ -231,7 +215,6 @@ const Expense = ({ selectedExpense , setSelectedExpense }) => {
         </div>
       </div>
       {showModal && <ImageModal image={selectedImage} closeModal={() => setShowModal(false)} />}
-
       <DeleteConfirmationModal
         show={showDeleteConfirmation}
         onClose={() => setShowDeleteConfirmation(false)}

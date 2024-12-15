@@ -1,85 +1,54 @@
+.chart {
+  background: var(--background-color-3);
+  box-shadow: var(--box-shadow);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  height: 40vh;
+  place-items: center;
+}
+
 .dashboard-con {
-  display: block;
   padding: 20px;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: #191d2b; /* Dark background color */
-  color: #fff; /* Light text color */
+  flex: 1;
+  background-color: var(--background-color-2);
+  color: var(--white);
+  border-radius: var(--border-radius);
 }
 
-.dashboard-con .dashboard-heading {
-  font-size: 48px;
+.con {
+  background-color: var(--background-color-3);
+  color: var(--white);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 3rem;
-  color: #45a1d6;
-  text-transform: uppercase;
-}
-
-.dashboard-con .balance-con {
-  background-color: #304a6e;
-  color: #fff;
-  border: 2px solid #fff;
-  border-radius: 15px;
+  flex-direction: column;
+  width: 90%;
+  border-radius: var(--border-radius);
   text-align: center;
   margin: 10px;
   padding: 20px;
   box-shadow: var(--box-shadow);
 }
 
-.dashboard-con .income-expense-con {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: 20px;
+.con span {
+  color: var(--primary-color);
 }
 
-.dashboard-con .dashboard-income-con,
-.dashboard-con .dashboard-expense-con {
-  background-color: #304a6e; /* Darker background for containers */
-  color: #fff;
-  border: 2px solid #fff;
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  border-radius: 15px;
-  text-align: center;
-  margin: 10px;
-  padding: 20px;
-  box-shadow: var(
-    --box-shadow
-  ); /* Apply the box-shadow variable defined in App.css */
-}
-
-.dashboard-con .main-content {
+.main-content {
   display: flex;
   flex-direction: row;
 }
 
-.dashboard-con .main-content .left-content {
+.left-content,
+.right-content {
   flex: 1;
   margin: 10px;
   display: flex;
   flex-direction: column;
 }
 
-.dashboard-con .main-content .right-content {
-  flex: 1;
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-}
-
-.dashboard-con .main-content .right-content .history-con {
-  display: flex;
-  justify-content: center;
+.history-con {
   height: 100%;
-  border: 2px solid #fff;
-  background-color: #304a6e;
-  color: #fff;
-  border-radius: 15px;
+  background-color: var(--background-color-3);
+  color: var(--white);
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
 }

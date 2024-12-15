@@ -7,61 +7,61 @@ import "../style/Analysis.css";
 const Analysis = () => {
   const { incomes, expenses } = useContext(GlobalContext);
 
-  // Helper: Group transactions by month
+  // Group transactions by month and calculate total amount for each month
   const groupByMonth = (transactions) => {
     return transactions.reduce((acc, txn) => {
-      const month = new Date(txn.date).toISOString().slice(0, 7); // Format: YYYY-MM
+      const month = new Date(txn.date).toISOString().slice(0, 7);
       acc[month] = (acc[month] || 0) + txn.amount;
       return acc;
     }, {});
   };
 
-  // Get grouped data
   const incomeByMonth = groupByMonth(incomes);
   const expenseByMonth = groupByMonth(expenses);
 
-  // Calculate the number of months with data
+  // Calculate the number of unique months with data
   const totalMonths = new Set([
     ...Object.keys(incomeByMonth),
     ...Object.keys(expenseByMonth),
   ]).size;
 
-  // Avoid division by zero
-  const monthsWithData = totalMonths || 1;
+  const monthsWithData = totalMonths || 1; // Ensure division by zero doesn't occur
 
-  // Monthly averages (rounded)
+  // Calculate monthly averages
   const monthlyAvgIncome = Math.round(
     Object.values(incomeByMonth).reduce((a, b) => a + b, 0) / monthsWithData
   );
+
   const monthlyAvgExpense = Math.round(
     Object.values(expenseByMonth).reduce((a, b) => a + b, 0) / monthsWithData
   );
 
-  // Average monthly balance (rounded)
   const avgMonthlyBalance = Math.round(monthlyAvgIncome - monthlyAvgExpense);
 
-  // Total savings (rounded)
+  // Calculate total savings
   const totalSavings = Math.round(
     incomes.reduce((a, b) => a + b.amount, 0) -
-      expenses.reduce((a, b) => a + b.amount, 0)
+    expenses.reduce((a, b) => a + b.amount, 0)
   );
 
-  // Expense categories breakdown
+  // Group expenses by category
   const expenseCategories = expenses.reduce((acc, txn) => {
     acc[txn.category] = (acc[txn.category] || 0) + txn.amount;
     return acc;
   }, {});
 
+  // Get top 3 expense categories
   const top3ExpenseCategories = Object.entries(expenseCategories)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3);
 
-  // Prepare data for donut charts
+  // Group incomes by category
   const incomeCategoriesData = incomes.reduce((acc, txn) => {
     acc[txn.category] = (acc[txn.category] || 0) + txn.amount;
     return acc;
   }, {});
 
+  // Prepare data for expense chart
   const expenseChartData = {
     labels: Object.keys(expenseCategories),
     datasets: [
@@ -72,6 +72,7 @@ const Analysis = () => {
     ],
   };
 
+  // Prepare data for income chart
   const incomeChartData = {
     labels: Object.keys(incomeCategoriesData),
     datasets: [
@@ -84,42 +85,93 @@ const Analysis = () => {
 
   return (
     <div className="analysis-con">
-      {/* Monthly Averages */}
       <div className="analysis-item">
-        <h3>Monthly Averages</h3>
-        <p>Average Income: {moneyFormatter(monthlyAvgIncome)}</p>
-        <p>Average Expense: {moneyFormatter(monthlyAvgExpense)}</p>
-        <p>Average Monthly Balance: {moneyFormatter(avgMonthlyBalance)}</p>
+        <h2>Rata-rata tiap bulan</h2>
+        <p>Rata-rata Pendapatan: {moneyFormatter(monthlyAvgIncome)}</p>
+        <p>Rata-rata Pengeluaran: {moneyFormatter(monthlyAvgExpense)}</p>
+        <p>Rata-rata Saldo: {moneyFormatter(avgMonthlyBalance)}</p>
       </div>
-
-      {/* Donut Charts */}
       <div className="charts">
         <div className="chart">
-          <h4>Income Categories</h4>
-          <Doughnut data={incomeChartData} options={{plugins: {legend: {labels: {color: 'white'}}}}}/>
+          <Doughnut 
+            data={incomeChartData} 
+            options={{
+              plugins: {
+                legend: {
+                  labels: { 
+                    color: 'white' 
+                  }
+                },
+                title: {
+                  display: true,
+                  text: 'Distribusi Pendapatan',
+                  color: '#00A2FF',
+                  font: {
+                    size: 18,
+                  },
+                },
+                tooltip: {
+                  enabled: true,
+                  callbacks: {
+                    label: function(context) {
+                      return moneyFormatter(context.raw);
+                    }
+                  }
+                }
+              },
+              responsive: true,
+              maintainAspectRatio: false
+            }} 
+          />
         </div>
         <div className="chart">
-          <h4>Expense Categories</h4>
-          <Doughnut data={expenseChartData} options={{plugins: {legend: {labels: {color: 'white'}}}}}/>
+          <Doughnut 
+            data={expenseChartData} 
+            options={{
+              plugins: {
+                legend: {
+                  labels: { 
+                    color: 'white' 
+                  }
+                },
+                title: {
+                  display: true,
+                  text: 'Distribusi Pengeluaran',
+                  color: '#00A2FF',
+                  font: {
+                    size: 18,
+                  },
+                },
+                tooltip: {
+                  enabled: true,
+                  callbacks: {
+                    label: function(context) {
+                      return moneyFormatter(context.raw);
+                    }
+                  }
+                }
+              },
+              responsive: true,
+              maintainAspectRatio: false
+            }} 
+          />
         </div>
       </div>
-
-      {/* Top 3 Expense Categories */}
-      <div className="analysis-item">
-        <h3>Top 3 Expense Categories</h3>
-        <ul>
-          {top3ExpenseCategories.map(([category, amount], index) => (
-            <li key={index}>
-              {category}: {moneyFormatter(Math.round(amount))}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Total Savings */}
-      <div className="analysis-item">
-        <h3>Total Savings</h3>
-        <p>{moneyFormatter(totalSavings)}</p>
+      <div className="analysis-item-container">
+        <div className="analysis-item">
+          <h2>Top 3 Kategori Pengeluaran</h2>
+          <ul>
+            {top3ExpenseCategories.map(([category, amount], index) => (
+              <li key={index}>
+                {category}: {moneyFormatter(Math.round(amount))}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="analysis-item">
+          <h2>Saldo Total</h2>
+          <p>{moneyFormatter(totalSavings)}</p>
+        </div>
       </div>
     </div>
   );

@@ -1,74 +1,42 @@
 import React, { useState } from 'react';
 
+// Navigation component to handle button clicks and active states
 const Navigation = ({ activeButton, handleButtonClick }) => {
   const [pressedButton, setPressedButton] = useState('');
 
+  // Handles button click events
   const handleClick = (buttonName) => {
-    handleButtonClick(buttonName);
-    setPressedButton(buttonName);
+    handleButtonClick(buttonName); // Call parent handler
+    setPressedButton(buttonName);  // Set the pressed button state
   };
 
+  // Resets the pressed button state on mouse release
   const handleButtonRelease = () => {
     setPressedButton('');
   };
 
+  // Render method for Navigation component
   return (
     <div className="navigation">
-      <div className="choose-nav">
-        <div
-          className={`dashboard overlap-group ${activeButton === 'dashboard' ? 'active' : ''} ${
-            pressedButton === 'dashboard' ? 'pressed' : ''
-          }`}
-          onClick={() => handleClick('dashboard')}
-          onMouseUp={handleButtonRelease}
-        >
-          <div className="text-wrapper">Dashboard</div>
+      {[
+        { name: 'dashboard', label: 'Dashboard' },
+        { name: 'analisis', label: 'Analisis' },
+        { name: 'riwayat', label: 'Riwayat' },
+        { name: 'pendapatan', label: 'Pendapatan' },
+        { name: 'pengeluaran', label: 'Pengeluaran' },
+      ].map(({ name, label }) => (
+        <div key={name} className="choose-nav">
+          <div
+            className={`overlap-group ${name} ${
+              activeButton === name ? 'active' : ''
+            } ${pressedButton === name ? 'pressed' : ''}`}
+            onClick={() => handleClick(name)}
+            onMouseUp={handleButtonRelease}
+          >
+            <div className="text-wrapper">{label}</div>
+          </div>
         </div>
-      </div>
-      <div className="choose-nav">
-        <div
-          className={`analysis overlap-group ${activeButton === 'analysis' ? 'active' : ''} ${
-            pressedButton === 'analysis' ? 'pressed' : ''
-          }`}
-          onClick={() => handleClick('analysis')}
-          onMouseUp={handleButtonRelease}
-        >
-          <div className="text-wrapper">Analysis</div>
-        </div>
-      </div>
-      <div className="choose-nav">
-        <div
-          className={`view-transaction overlap-group ${activeButton === 'view-transaction' ? 'active' : ''} ${
-            pressedButton === 'view-transaction' ? 'pressed' : ''
-          }`}
-          onClick={() => handleClick('view-transaction')}
-          onMouseUp={handleButtonRelease}
-        >
-          <div className="text-wrapper">View Transaction</div>
-        </div>
-      </div>
-      <div className="choose-nav">
-        <div
-          className={`income overlap-group ${activeButton === 'income' ? 'active' : ''} ${
-            pressedButton === 'income' ? 'pressed' : ''
-          }`}
-          onClick={() => handleClick('income')}
-          onMouseUp={handleButtonRelease}
-        >
-          <div className="text-wrapper">Income</div>
-        </div>
-      </div>
-      <div className="choose-nav">
-        <div
-          className={`expense overlap-group ${activeButton === 'expense' ? 'active' : ''} ${
-            pressedButton === 'expense' ? 'pressed' : ''
-          }`}
-          onClick={() => handleClick('expense')}
-          onMouseUp={handleButtonRelease}
-        >
-          <div className="text-wrapper">Expense</div>
-        </div>
-      </div>
+      ))}
     </div>
   );
 };

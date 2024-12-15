@@ -1,8 +1,0 @@
-.chart {
-    background: #304a6e; /* Darker background color */
-    border: 2px solid #fff;
-    box-shadow: var(--box-shadow); /* Apply the box-shadow variable defined in App.css */
-    padding: 1rem;
-    border-radius: 20px;
-    height: 100%;
-  }

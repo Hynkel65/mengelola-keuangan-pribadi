@@ -6,12 +6,14 @@ import Signup from './components/auth/Signup';
 import './App.css';
 
 function App() {
+  // State to toggle between Signin and Signup components
   const [showLogin, setShowLogin] = useState(true);
+  // Accessing the authentication status from GlobalContext
   const { isAuthenticated } = useContext(GlobalContext);
-  console.log(isAuthenticated);
 
   return (
     <GlobalProvider>
+      {/* If the user is not authenticated, show authentication options */}
       {!isAuthenticated ? (
         <div className="auth-container">
           {showLogin ? (
@@ -43,6 +45,7 @@ function App() {
           )}
         </div>
       ) : (
+        // If the user is authenticated, show the Main component
         <Main />
       )}
     </GlobalProvider>

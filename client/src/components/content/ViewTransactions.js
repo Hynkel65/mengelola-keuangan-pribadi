@@ -6,84 +6,68 @@ import ImageModal from "../utils/ImageModal";
 import DeleteConfirmationModal from '../utils/DeleteConfirmationModal';
 
 const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) => {
+  // Fetching incomes, expenses, and deletion functions from Global Context
   const { incomes, expenses, deleteIncome, deleteExpense } = useContext(GlobalContext);
 
-  // Combine incomes and expenses for a unified view
+  // Combine incomes and expenses into a single transactions array with type indication
   const transactions = [...incomes, ...expenses].map((txn) => ({
     ...txn,
     type: incomes.includes(txn) ? "Income" : "Expense",
   }));
 
+  // State declarations
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
-
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
   const [filterType, setFilterType] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8; // Set to 10 for ten items per page
+  const itemsPerPage = 8;
 
-  // Sort logic
+  // Sorting transactions based on sortConfig
   const sortedTransactions = [...transactions].sort((a, b) => {
-    // Default sort by date if no sort config
     if (!sortConfig.key) {
       return new Date(b.date) - new Date(a.date);
     }
-    
-    // Handle date sorting specifically
+    const order = sortConfig.direction === "ascending" ? 1 : -1;
     if (sortConfig.key === 'date') {
-      const order = sortConfig.direction === "ascending" ? 1 : -1;
       return (new Date(a.date) - new Date(b.date)) * order;
     }
-    
-    // Handle other fields
-    const order = sortConfig.direction === "ascending" ? 1 : -1;
     return a[sortConfig.key] > b[sortConfig.key] ? order : -order;
   });
 
-  // Filter and Search logic
+  // Filtering transactions based on searchTerm, filterCategory, and filterType
   const filteredTransactions = sortedTransactions.filter((txn) => {
-    const matchesSearch =
-      searchTerm === "" ||
-      Object.values(txn)
-        .join(" ")
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      filterCategory === "" || txn.category === filterCategory;
+    const matchesSearch = searchTerm === "" || Object.values(txn).join(" ").toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filterCategory === "" || txn.category === filterCategory;
     const matchesType = filterType === "" || txn.type === filterType;
     return matchesSearch && matchesCategory && matchesType;
   });
 
-  // Calculate total pages
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-
-  // Get current transactions for the current page
   const currentTransactions = filteredTransactions.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  // Handle sorting logic
   const handleSort = (key) => {
     setSortConfig((prev) => {
-      const direction =
-        prev.key === key && prev.direction === "ascending"
-          ? "descending"
-          : "ascending";
+      const direction = prev.key === key && prev.direction === "ascending" ? "descending" : "ascending";
       return { key, direction };
     });
   };
 
+  // Handle image click to show modal
   const handleImgClick = (imgSrc) => {
     setSelectedImage(imgSrc);
     setShowModal(true);
   };
 
+  // Handle transaction edit
   const handleEditTransaction = (transaction) => {
     if (transaction.type === 'Income') {
       setSelectedIncome(transaction);
@@ -109,12 +93,10 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
 
   return (
     <div className="view-transactions-con">
-      <div className="view-transactions-heading">View Transactions</div>
-      {/* Search and Filter */}
       <div className="filter-container">
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Cari..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -122,30 +104,25 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
         >
-          <option value="">All Categories</option>
-          <option value="salary">Salary</option>
-          <option value="freelancing">Freelancing</option>
-          <option value="investments">Investments</option>
-          <option value="stocks">Stocks</option>
-          <option value="bitcoin">Bitcoin</option>
-          <option value="bank">Bank Transfer</option>
-          <option value="youtube">Youtube</option>
-          <option value="education">Education</option>
-          <option value="groceries">Groceries</option>
-          <option value="health">Health</option>
-          <option value="subscriptions">Subscriptions</option>
-          <option value="takeaways">Takeaways</option>
-          <option value="clothing">Clothing</option>
-          <option value="traveling">Traveling</option>
-          <option value="others">Others</option>
+          <option value="">Semua Kategori</option>
+          <option value="active_income">Pendapatan Aktif</option>
+          <option value="passive_income">Pendapatan Pasif</option>
+          <option value="other_income">Pendapatan Lainya</option>
+=======
+          <option value="basic_needs">Kebutuhan Pokok</option>
+          <option value="education">Pendidikan</option>
+          <option value="entertainment">Hiburan</option>
+          <option value="social">Sosial</option>
+          <option value="finance">Keuangan</option>
+          <option value="unexpected_expenses">Pengeluaran Tidak Terduga</option>
         </select>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
         >
-          <option value="">All Types</option>
-          <option value="Income">Income</option>
-          <option value="Expense">Expense</option>
+          <option value="">Semua Tipe</option>
+          <option value="Income">Pendapatan</option>
+          <option value="Expense">Pengeluaran</option>
         </select>
       </div>
 
@@ -153,14 +130,14 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
       <table className="transactions-table">
         <thead>
           <tr>
-            <th>Image</th>
-            <th onClick={() => handleSort("title")}>Title</th>
-            <th onClick={() => handleSort("description")}>Description</th>
-            <th onClick={() => handleSort("category")}>Category</th>
-            <th onClick={() => handleSort("amount")}>Amount</th>
-            <th onClick={() => handleSort("date")}>Date</th>
-            <th onClick={() => handleSort("type")}>Type</th>
-            <th>Action</th>
+            <th>Gambar</th>
+            <th onClick={() => handleSort("title")}>Judul</th>
+            <th onClick={() => handleSort("description")}>Deskripsi</th>
+            <th onClick={() => handleSort("category")}>Kategori</th>
+            <th onClick={() => handleSort("amount")}>Jumlah</th>
+            <th onClick={() => handleSort("date")}>Tanggal</th>
+            <th onClick={() => handleSort("type")}>Tipe</th>
+            <th>Aksi</th>
           </tr>
         </thead>
         <tbody>
@@ -186,12 +163,12 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
               <td>{moneyFormatter(txn.amount)}</td>
               <td>{new Date(txn.date).toLocaleDateString()}</td>
               <td>{txn.type}</td>
-              <td>
+              <td className="action-btn">
                 <button onClick={() => handleEditTransaction(txn)} className="edit-btn">
                   Edit
                 </button>
-                <button 
-                  className="delete-btn" 
+                <button
+                  className="delete-btn"
                   onClick={() => {
                     setTransactionToDelete(txn);
                     setShowDeleteConfirmation(true);
@@ -211,8 +188,9 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
         <span>Page {currentPage} of {totalPages}</span>
         <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
       </div>
+
+      {/* Modals */}
       {showModal && <ImageModal image={selectedImage} closeModal={() => setShowModal(false)} />}
-      
       <DeleteConfirmationModal
         show={showDeleteConfirmation}
         onClose={() => setShowDeleteConfirmation(false)}

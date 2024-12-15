@@ -1,43 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {Chart as ChartJs, 
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    ArcElement,
-} from 'chart.js'
-
+import { Chart as ChartJs, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-
-import '../style/Chart.css';
 import { GlobalContext } from '../context/GlobalState';
+import moneyFormatter from "../utils/MoneyFormatter";
 
-ChartJs.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    ArcElement,
-)
+// Register necessary Chart.js components
+ChartJs.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
 
+// Function to group data by month
 function groupByMonth(data) {
   const groupedData = {};
-
   data.forEach(item => {
-    const month = item.date.substring(0, 7); // Extract the year and month (YYYY-MM)
+    const month = item.date.substring(0, 7); // Extract YYYY-MM from date
     if (!groupedData[month]) {
       groupedData[month] = { income: 0, expense: 0 };
     }
-
-    groupedData[month].income += item.amount;
+    groupedData[month].income += item.amount; // Aggregate income
   });
-
+  
+  // Convert grouped data into an array of objects
   return Object.entries(groupedData).map(([month, { income }]) => ({
     month,
     income,
@@ -52,7 +33,7 @@ function Chart() {
     const groupedIncomes = groupByMonth(incomes);
     const groupedExpenses = groupByMonth(expenses);
 
-    // Merge income and expense data for each month
+    // Merge income and expenses data by month
     const mergedData = groupedIncomes.map(({ month, income }) => ({
       month,
       income,
@@ -62,18 +43,19 @@ function Chart() {
     setChartData(mergedData);
   }, [incomes, expenses]);
 
+  // Prepare data for the chart
   const data = {
     labels: chartData.map(item => item.month),
     datasets: [
       {
-        label: 'Income',
+        label: 'Pendapatan',
         data: chartData.map(item => item.income),
         backgroundColor: 'green',
         borderColor: 'white',
         tension: 0.2,
       },
       {
-        label: 'Expenses',
+        label: 'Pengeluaran',
         data: chartData.map(item => item.expense),
         backgroundColor: 'red',
         borderColor: 'white',
@@ -82,12 +64,21 @@ function Chart() {
     ],
   };
 
+  // Chart options
   const options = {
     plugins: {
       legend: {
         labels: {
           color: '#fff',
         },
+      },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: function(context) {
+            return moneyFormatter(context.raw);
+          }
+        }
       },
     },
     scales: {

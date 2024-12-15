@@ -1,37 +1,17 @@
 .income-con {
-    display: block;
-    padding: 20px;
-    height: 100%;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    background-color: #191d2b;
-    color: #fff;
-}
-
-.income-con .income-heading {
-    font-size: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 3rem;
-    color: #45a1d6;
-    text-transform: uppercase;
+  padding: 20px;
+  flex: 1;
+  background-color: var(--background-color-2);
+  color: var(--white);
+  border-radius: var(--border-radius);
 }
 
 .income-con .total-income-con {
-    background-color: #304a6e;
-    color: #fff;
-    border: 2px solid #fff;
-    padding: 20px;
-    margin: 10px;
-    font-size: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: var(--box-shadow);
+  background-color: var(--background-color-3);
+  margin: 10px;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
 }
 
 .income-con .main-content {
@@ -52,32 +32,26 @@
   margin: 10px;
   display: flex;
   flex-direction: column;
-  background-color: #304a6e;
-  color: #fff;
-  border: 2px solid #fff;
-  border-radius: 15px;
+  background-color: var(--background-color-3);
+  color: var(--white);
+  border-radius: var(--border-radius);
   text-align: center;
   padding: 5px;
   box-shadow: var(--box-shadow);
 }
 
-.income-con .main-content .right-content .history-heading {
-  font-size: 24px;
+.income-con .main-content .right-content .history-item-con {
+  background: var(--background-color-2);
+  box-shadow: var(--box-shadow);
+  padding: 10px;
+  border-radius: var(--border-radius);
   display: flex;
-  justify-content: center;
-  margin-bottom: 2rem;
-  color: #fff;
+  align-items: center;
+  margin: 10px;
 }
 
-.income-con .main-content .right-content .history-item-con {
-    background: #191d2b;
-    border: 2px solid #fff;
-    box-shadow: var(--box-shadow);
-    padding: 10px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    margin: 10px;
+.income-con .main-content .right-content .history-item-con:hover {
+  background: var(--background-color-3);
 }
 
 .income-con .main-content .right-content .history-item-con .category-icon {
@@ -105,22 +79,17 @@
   height: 50px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid #fff;
+  border: 2px solid var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 20px;
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-}
-
 .income-con .main-content .right-content .history-item-con .history-title {
   font-size: 18px;
   font-weight: bold;
-  color: #fff;
+  color: var(--white);
   margin-bottom: 10px;
 }
 
@@ -140,5 +109,5 @@ img {
 }
 
 .income-con .amount {
-  color: #55efc4;
+  color: #55efc4; /* You can replace this with a variable if needed */
 }

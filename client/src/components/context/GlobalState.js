@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useEffect } from 'react';
 import AppReducer from './AppReducer';
 import axios from 'axios';
 
-// Initial state
+// Initial state for the context
 const initialState = {
   incomes: [],
   expenses: [],
@@ -11,28 +11,27 @@ const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
 };
 
-// Create context
+// Create a context
 export const GlobalContext = createContext(initialState);
 
-// Provider component
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
+  // Sign in a user
   const signin = async (userData) => {
     try {
       const res = await axios.post('/api/v1/users/signin', userData);
-      console.log('Sign-in response:', res.data); // Log the response
       dispatch({ type: 'SIGN_IN_SUCCESS', payload: res.data.user });
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      console.log('User  signed in:', res.data.user); // Log the user data
       return true;
     } catch (error) {
-      console.error('Sign-in error:', error.response?.data?.message); // Log any error messages
+      console.error('Sign-in error:', error.response?.data?.message);
       dispatch({ type: 'AUTH_ERROR', payload: error.response?.data?.message });
       return false;
     }
   };
 
+  // Sign up a new user
   const signup = async (userData) => {
     try {
       const res = await axios.post('/api/v1/users/signup', userData);
@@ -44,52 +43,50 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+  // Sign out the current user
   const signout = async () => {
     try {
-      await axios.post('/api/v1/users/signout'); // Call the signout API
-      dispatch({ type: 'SIGN_OUT' }); // Dispatch the SIGN_OUT action
-      localStorage.removeItem('isAuthenticated'); // Remove isAuthenticated from local storage
-      localStorage.removeItem('user'); // Remove user from local storage
+      await axios.post('/api/v1/users/signout');
+      dispatch({ type: 'SIGN_OUT' });
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('user');
       return true;
     } catch (error) {
       dispatch({ type: 'AUTH_ERROR', payload: error.response?.data?.message });
       return false;
     }
   };
-  
+
+  // Store authentication status and user in local storage
   useEffect(() => {
     localStorage.setItem('isAuthenticated', JSON.stringify(state.isAuthenticated));
     localStorage.setItem('user', JSON.stringify(state.user));
   }, [state.isAuthenticated, state.user]);
-  
 
+  // Check authentication status on component mount
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const res = await axios.get('/api/v1/users/check-auth',{
+        const res = await axios.get('/api/v1/users/check-auth', {
           withCredentials: true,
         });
-        console.log('Check auth response:', res.data);
         if (res.data.isAuthenticated) {
-          dispatch({ 
-            type: 'SIGN_IN_SUCCESS', 
-            payload: res.data.user 
+          dispatch({
+            type: 'SIGN_IN_SUCCESS',
+            payload: res.data.user,
           });
         }
       } catch (error) {
         dispatch({ type: 'AUTH_ERROR' });
       }
     };
-    
     checkAuthStatus();
   }, []);
 
-  // Actions
-  // Fetch data from the backend and update state for incomes
+  // Fetch incomes from the server
   const getIncomes = async () => {
     try {
       const res = await axios.get('/api/v1/incomes');
-      console.log('Fetched incomes:', res.data.data);
       dispatch({ type: 'GET_INCOMES', payload: res.data.data });
     } catch (error) {
       console.error('Error fetching incomes:', error.response?.data?.error);
@@ -97,7 +94,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Fetch data from the backend and update state for expenses
+  // Fetch expenses from the server
   const getExpenses = async () => {
     try {
       const res = await axios.get('/api/v1/expenses');
@@ -107,11 +104,10 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Action to add income
+  // Add a new income
   const addIncome = async (incomeData) => {
     try {
       const res = await axios.post('/api/v1/incomes', incomeData);
-      console.log('Added new income:', res.data.data);
       dispatch({ type: 'ADD_INCOME', payload: res.data.data });
     } catch (error) {
       console.error('Error adding income:', error.response?.data?.error);
@@ -119,7 +115,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Action to add expense
+  // Add a new expense
   const addExpense = async (expenseData) => {
     try {
       const res = await axios.post('/api/v1/expenses', expenseData);
@@ -129,7 +125,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Action to delete income
+  // Delete an income by ID
   const deleteIncome = async (id) => {
     try {
       await axios.delete(`/api/v1/incomes/${id}`);
@@ -139,7 +135,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Action to delete expense
+  // Delete an expense by ID
   const deleteExpense = async (id) => {
     try {
       await axios.delete(`/api/v1/expenses/${id}`);
@@ -149,7 +145,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Action to update income
+  // Update an income by ID
   const updateIncome = async (id, updatedIncomeData) => {
     try {
       const response = await fetch(`/api/v1/incomes/${id}`, {
@@ -159,11 +155,9 @@ export const GlobalProvider = ({ children }) => {
         },
         body: JSON.stringify(updatedIncomeData),
       });
-  
       if (!response.ok) {
         throw new Error(`Failed to update income: ${response.status} ${response.statusText}`);
       }
-  
       const updatedIncome = await response.json();
       dispatch({ type: 'UPDATE_INCOME', payload: updatedIncome.data });
       return updatedIncome;
@@ -173,7 +167,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // Action to update expense
+  // Update an expense by ID
   const updateExpense = async (id, updatedExpenseData) => {
     try {
       const response = await fetch(`/api/v1/expenses/${id}`, {
@@ -183,11 +177,9 @@ export const GlobalProvider = ({ children }) => {
         },
         body: JSON.stringify(updatedExpenseData),
       });
-  
       if (!response.ok) {
         throw new Error(`Failed to update expense: ${response.status} ${response.statusText}`);
       }
-  
       const updatedExpense = await response.json();
       dispatch({ type: 'UPDATE_EXPENSE', payload: updatedExpense.data });
       return updatedExpense;
@@ -197,6 +189,7 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+  // Fetch incomes and expenses if authenticated
   useEffect(() => {
     if (state.isAuthenticated) {
       getIncomes();
@@ -204,6 +197,7 @@ export const GlobalProvider = ({ children }) => {
     }
   }, [state.isAuthenticated]);
 
+  // Provide context values to children components
   return (
     <GlobalContext.Provider
       value={{
