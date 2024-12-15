@@ -1,6 +1,35 @@
 // src/components/context/AppReducer.js
 const AppReducer = (state, action) => {
   switch (action.type) {
+    case 'SIGN_IN_SUCCESS':
+      console.log('Reducer: SIGN_IN_SUCCESS action dispatched');
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload,
+        error: null
+      };
+    case 'SIGN_UP_SUCCESS':
+      return {
+        ...state,
+        user: action.payload,
+        error: null
+      };
+    case 'AUTH_ERROR':
+      return {
+        ...state,
+        error: action.payload
+      };
+    case 'SIGN_OUT':
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('user');
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+        incomes: [],
+        expenses: []
+      };
     case 'GET_INCOMES':
       return {
         ...state,

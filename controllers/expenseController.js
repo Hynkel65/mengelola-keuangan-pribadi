@@ -1,13 +1,15 @@
 const Expense = require('../models/Expenses');
 const upload = require('../middleware/uploadMiddleware');
 
+const fs = require('fs');
+const path = require('path');
 
 // @desc    Get all expense
 // @route   GET /api/v1/expenses
-// @access  Public
+// @access  user.id
 exports.getExpenses = async (req, res, next) => {
     try {
-        const expense = await Expense.find();
+        const expense = await Expense.find({ user: req.user.id });
 
         return res.status(200).json({
             success: true,
@@ -24,7 +26,7 @@ exports.getExpenses = async (req, res, next) => {
 
 // @desc    Add expense
 // @route   POST /api/v1/expenses
-// @access  Public
+// @access  user.id
 exports.addExpense = async (req, res, next) => {
     try {
         const { title, amount, date, category, description } = req.body;
@@ -36,6 +38,7 @@ exports.addExpense = async (req, res, next) => {
             date,
             category,
             description,
+            user: req.user.id,
             image: req.file ? req.file.filename : undefined
         });
 
@@ -62,10 +65,13 @@ exports.addExpense = async (req, res, next) => {
 
 // @desc    Delete expense
 // @route   DELETE /api/v1/expenses/:id
-// @access  Public
+// @access  user.id
 exports.deleteExpense= async (req, res, next) => {
     try {
-        const expense = await Expense.findById(req.params.id);
+        const expense = await Expense.findOne({
+            _id: req.params.id,
+            user: req.user.id
+        });
 
         if(!expense) {
             return res.status(404).json({
@@ -91,10 +97,13 @@ exports.deleteExpense= async (req, res, next) => {
 
 // @desc    Update expense
 // @route   PATCH /api/v1/expenses/:id
-// @access  Public
+// @access  user.id
 exports.updateExpense = async (req, res, next) => {
     try {
-        const expense = await Expense.findById(req.params.id);
+        const expense = await Expense.findOne({
+            _id: req.params.id,
+            user: req.user.id
+        });
         if(!expense) {
             return res.status(404).json({
                 success: false,
@@ -108,6 +117,14 @@ exports.updateExpense = async (req, res, next) => {
         expense.category = req.body.category;
         expense.description = req.body.description;
         
+        if (req.file) {
+            if (expense.image) {
+                const oldImagePath = path.join(__dirname, '../uploads', expense.image);
+                fs.unlinkSync(oldImagePath);
+            }
+            expense.image = req.file.filename;
+        }
+
         await expense.save();
 
         return res.status(200).json({

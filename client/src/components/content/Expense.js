@@ -7,7 +7,7 @@ import ImageModal from '../utils/ImageModal';
 import '../style/Expense.css'
 import { GlobalContext } from '../context/GlobalState';
 
-const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
+const Expense = ({ selectedExpense , setSelectedExpense }) => {
   const { expenses, addExpense, deleteExpense, updateExpense } = useContext(GlobalContext);
   
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -70,12 +70,6 @@ const Expense = ({ getFileInputRef, selectedExpense , setSelectedExpense }) => {
         description: '',
         image: null
       });
-
-      const fileInputRef = getFileInputRef(); // Get the fileInputRef from the Form component
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ''; // Clear the file input value
-      }
     } catch (error) {
       console.error('Error adding expense:', error)
     }

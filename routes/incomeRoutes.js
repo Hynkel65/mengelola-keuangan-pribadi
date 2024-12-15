@@ -11,12 +11,12 @@ const {
 } = require('../controllers/incomeController');
 
 incomeRouter
-    .route('/incomes')
+    .route('/')
     .get(getIncomes)
     .post(upload.single('image'), addIncome);
 
 incomeRouter
-    .route('/incomes/:id')
+    .route('/:id')
     .delete(deleteIncome)
     .patch(updateIncome);
 

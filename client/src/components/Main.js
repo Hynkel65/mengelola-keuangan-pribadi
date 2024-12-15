@@ -3,7 +3,7 @@ import './style/Main.css';
 
 import Navigation from './Navigation';
 import Header from './Header';
-import SignOut from './SignOut';
+import SignOut from './auth/SignOut';
 
 import Dashboard from './content/Dashboard';
 import Analysis from './content/Analysis';
@@ -25,16 +25,12 @@ function Main() {
     setActiveButton(tabName);
   };
 
-  const handleSignOut = () => {
-    console.log('User signed out.');
-  };
-
   return (
       <div className="container">
         <div className="left-con">
           <Header />
           <Navigation activeButton={activeButton} handleButtonClick={handleButtonClick} />
-          <SignOut handleSignOut={handleSignOut} />
+          <SignOut />
         </div>
         <div className="right-con">
           {activeButton === 'dashboard' && <Dashboard />}

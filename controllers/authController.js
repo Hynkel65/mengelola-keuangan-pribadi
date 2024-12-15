@@ -1,99 +1,88 @@
-const User = require("../models/user");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const User = require('../models/User');
 
-const maxAge = 3 * 24 * 60 * 60; // 3 days
-const saltRounds = 12;
-
-const handleError = (err) => {
-  let errors = { email: "", password: "" };
-
-  if (err.message === "incorrect email") {
-    errors.email = "That email is not registered";
-  }
-
-  if (err.message === "incorrect password") {
-    errors.password = "That password is incorrect";
-  }
-
-  if (err.code === 11000) {
-    errors.email = "That email is already registered";
-    return errors;
-  }
-
-  if (err.message.includes("user validation failed")) {
-    let errorsArray = Object.values(err.errors);
-    errorsArray.forEach(({ properties }) => {
-      errors[properties.path] = properties.message;
+const sendTokenResponse = (user, statusCode, res) => {
+    const token = user.getSignedJwtToken();
+    res.cookie('jwt', token, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite:'lax'
     });
-  }
-
-  console.error(err);
-  errors.general = "An unexpected error occurred";
-  return errors;
+    res.status(statusCode).json({ success: true, token, user: user.username });
 };
 
-const createTokens = (id) => {
-  return jwt.sign({ id }, process.env.SECRET_KEY, {
-    expiresIn: maxAge,
-  });
-};
-
-module.exports.signup = async (req, res) => {
-  const { name, email, password, confirmPassword } = req.body;
-  if (password === confirmPassword) {
-    try {
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const user = await User.create({ name, email, password: hashedPassword });
-      const token = createTokens(user._id);
-      res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000, secure: process.env.NODE_ENV === "production", sameSite: "Strict" });
-      res.status(201).json({ user });
-    } catch (err) {
-      const errors = handleError(err);
-      res.status(400).json({ errors });
+exports.checkAuth = async (req, res) => {
+    console.log('User  found:', req.user);
+    const token = req.cookies.jwt;
+    
+    if (!token) {
+        return res.status(401).json({ 
+            success: false, 
+            isAuthenticated: false 
+        });
     }
-  } else {
-    res.status(400).json({ errors: { confirmPassword: "Password doesn't match" } });
-  }
-};
 
-module.exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await User.login(email, password);
-    const token = createTokens(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000, secure: process.env.NODE_ENV === "production", sameSite: "Strict" });
-    res.status(200).json({ user });
-  } catch (err) {
-    const errors = handleError(err);
-    res.status(400).json({ errors });
-  }
-};
-
-module.exports.logout = (req, res) => {
-  res.clearCookie("jwt").status(204).json({ message: "Logged out successfully" });
-};
-
-module.exports.auth = async (req, res) => {
-  const token = req.cookies.jwt;
-  if (token) {
-    jwt.verify(token, process.env.SECRET_KEY, async (err, decodedToken) => {
-      if (err) {
-        res.status(401).json({ msg: "Login to Proceed" });
-      } else {
+    try {
+        const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
         const user = await User.findById(decodedToken.id);
-        if (user) {
-          res.status(200).json({ msg: "User  Login Found" });
-        } else {
-          res.status(404).json({ msg: "User  not found" });
+        
+        if (!user) {
+            return res.status(401).json({ 
+                success: false, 
+                isAuthenticated: false 
+            });
         }
-      }
-    });
-  } else {
-    res.status(401).json({ msg: "Login to Proceed" });
-  }
+
+        return res.status(200).json({ 
+            success: true, 
+            isAuthenticated: true,
+            user: user.username 
+        });
+    } catch (error) {
+        return res.status(401).json({ 
+            success: false, 
+            isAuthenticated: false 
+        });
+    }
 };
 
-module.exports.getuser = async (req, res) => {
-  res.status(200).json({ user: req.user });
+exports.signupUser = async (req, res, next) => {
+    const { username, password } = req.body;
+    try {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+        return res.status(400).json({ success: false, message: 'Username is already taken' });
+        }
+        const user = await User.create({ username, password });
+        sendTokenResponse(user, 201, res);
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.signinUser = async (req, res, next) => {
+    const { username, password } = req.body;
+    try {
+        const user = await User.findOne({ username }).select('+password');
+        if (!user) {
+        return res.status(401).json({ success: false, message: 'Username atau password tidak ditemukan!redentials' });
+        }
+        const isMatch = await user.matchPassword(password);
+        if (!isMatch) {
+        return res.status(401).json({ success: false, message: 'Username atau password tidak ditemukan!redentials' });
+        }
+        sendTokenResponse(user, 200, res);
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.signoutUser = async (req, res) => {
+    try {
+        res.clearCookie('jwt');
+        return res.status(200).json({ success: true, message: 'Logged out successfully' });
+    } catch (err) {
+        next(err);
+    }
 };

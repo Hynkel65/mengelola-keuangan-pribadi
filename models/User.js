@@ -1,45 +1,40 @@
-const mongoose = require("mongoose");
-const { isEmail } = require("validator");
-const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const userSchema = new mongoose.Schema({
-  name: {
+const UserSchema = new mongoose.Schema({
+  username: {
     type: String,
-    required: [true, "Please Enter your name"],
-    uppercase: true,
-  },
-  email: {
-    type: String,
-    required: [true, "Email is required field"],
-    validate: [isEmail, "Please Enter a valid email"],
-    lowercase: true,
+    required: [true, 'Please add a username'],
     unique: true,
+    trim: true,
+    maxlength: [30, 'Username cannot exceed 30 characters']
   },
   password: {
     type: String,
-    required: [true, "Password is required field"],
-    minLength: [8, "Password must be at least 8 characters"],
+    required: [true, 'Please add a password'],
+    minlength: [6, 'Password must be at least 6 characters long'],
+    select: false,
   },
+}, {
+  timestamps: true,
 });
 
-userSchema.pre("save", async function (next) {
-  const salt = await bcrypt.genSalt();
+UserSchema.methods.getSignedJwtToken = function() {
+  return jwt.sign({ id: this._id }, process.env.SECRET_KEY, {
+    expiresIn: '30d'
+  });
+};
+
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-userSchema.statics.login = async function (email, password) {
-  const user = await this.findOne({ email });
-  if (user) {
-    const auth = await bcrypt.compare(password, user.password);
-    if (auth) {
-      return user;
-    }
-    throw Error("incorrect password");
-  }
-  throw Error("incorrect email");
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = mongoose.model("user", userSchema);
-
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);

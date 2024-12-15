@@ -11,12 +11,12 @@ const {
 } = require('../controllers/expenseController');
 
 expenseRouter
-    .route('/expenses')  // Change this route from /incomes to /expenses
+    .route('/')
     .get(getExpenses)
     .post(upload.single('image'), addExpense);
 
 expenseRouter
-    .route('/expenses/:id')  // Change this route from /incomes/:id to /expenses/:id
+    .route('/:id')
     .delete(deleteExpense)
     .patch(updateExpense);
 

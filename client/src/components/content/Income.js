@@ -72,12 +72,7 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
         description: '',
         image: null
       });
-
-      const fileInputRef = getFileInputRef(); // Get the fileInputRef from the Form component
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ''; // Clear the file input value
-      }
+      
     } catch (error) {
       console.error('Error adding income:', error);
     }
