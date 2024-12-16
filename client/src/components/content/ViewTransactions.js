@@ -25,7 +25,7 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const itemsPerPage = 7;
 
   // Sorting transactions based on sortConfig
   const sortedTransactions = [...transactions].sort((a, b) => {
@@ -125,8 +125,11 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
           <option value="Expense">Pengeluaran</option>
         </select>
       </div>
-
-      {/* Table */}
+      <div className="pagination-controls">
+        <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
+      </div>
       <table className="transactions-table">
         <thead>
           <tr>
@@ -181,15 +184,6 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
           ))}
         </tbody>
       </table>
-
-      {/* Pagination Controls */}
-      <div className="pagination-controls">
-        <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
-      </div>
-
-      {/* Modals */}
       {showModal && <ImageModal image={selectedImage} closeModal={() => setShowModal(false)} />}
       <DeleteConfirmationModal
         show={showDeleteConfirmation}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './style/Main.css';
 import Navigation from './Navigation';
 import Header from './Header';
@@ -12,10 +12,26 @@ import Expense from './content/Expense';
 function Main() {
   // State to track the active tab
   const [activeButton, setActiveButton] = useState('dashboard');
+  const [isNavVisible, setIsNavVisible] = useState(window.innerWidth > 768); // State for navbar visibility
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsNavVisible(window.innerWidth > 768);
+    };
+  
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Handler to update active tab based on button click
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
+    setIsNavVisible(window.innerWidth > 768);
+  };
+
+  // Toggles the visibility of the navbar
+  const toggleNavbar = () => {
+    setIsNavVisible(!isNavVisible);
   };
 
   // State to track selected income and expense
@@ -29,7 +45,10 @@ function Main() {
 
   return (
     <div className="container">
-      <div className="left-con">
+      <button className="toggle-button" onClick={toggleNavbar}>
+        {isNavVisible ? 'Hide' : 'Show'} Menu
+      </button>
+      <div className={`left-con ${isNavVisible ? '' : 'collapsed'}`}>
         <Header />
         <Navigation activeButton={activeButton} handleButtonClick={handleButtonClick} />
         <SignOut />

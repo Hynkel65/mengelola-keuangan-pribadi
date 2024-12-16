@@ -3,7 +3,7 @@
   box-shadow: var(--box-shadow);
   padding: 1rem;
   border-radius: var(--border-radius);
-  height: 40vh;
+  height: 38vh;
   place-items: center;
 }
 
@@ -13,6 +13,7 @@
   background-color: var(--background-color-2);
   color: var(--white);
   border-radius: var(--border-radius);
+  height: 100%;
 }
 
 .con {
@@ -34,7 +35,13 @@
 
 .main-content {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* Default to row */
+}
+
+@media (max-width: 768px) { /* Adjust the breakpoint as needed */
+  .main-content {
+    flex-direction: column; /* Change to column on smaller screens */
+  }
 }
 
 .left-content,

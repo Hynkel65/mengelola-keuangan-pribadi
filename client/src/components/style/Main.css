@@ -63,12 +63,47 @@ background-color: var(--button-hover-color);
   background-color: rgb(190, 0, 0) !important;
 }
 
+.toggle-button {
+  display: none;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  z-index: 1000; /* Ensure it is above other elements */
+}
+
 .container {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* Default to row */
   justify-content: center;
   margin: 2em;
   height: 90vh;
+}
+
+@media (max-width: 1024px) { /* Adjust the breakpoint as needed */
+  .container {
+    flex-direction: column; /* Change to column on smaller screens */
+    position: relative;
+    align-items: center;
+  }
+
+  .left-con {
+    position: absolute; /* Add this */
+    padding: 0;
+    top: 0;
+    margin-right: 0;
+    margin-left: 0;
+    z-index: 999; /* Add this */
+    width: 90%; /* Add this */
+    background-color: var(--background-color-2);
+  }
+
+  .right-con {
+    margin-top: 0; /* Add this */
+  }
+
+  .toggle-button {
+    display: flex;
+  }
 }
 
 .container .left-con {
@@ -81,6 +116,22 @@ background-color: var(--button-hover-color);
   margin-left: 20px;
   border-radius: 15px;
   box-shadow: var(--box-shadow);
+  animation: slideInFromTop 0.5s ease-in-out;
+}
+
+.collapsed {
+  display: none !important; /* Hide the left-con when collapsed */
+}
+
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .container .left-con .header {
@@ -146,4 +197,6 @@ background-color: var(--button-hover-color);
   margin-left: 20px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+  height: 90vh;
+  overflow-y: auto;
 }

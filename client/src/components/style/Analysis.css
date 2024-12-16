@@ -1,10 +1,10 @@
 .analysis-con {
   padding: 20px;
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+  background-color: var(--background-color-2);
+  color: var(--white);
+  border-radius: var(--border-radius);
   width: 100%;
-  margin: 10px auto;
-  text-align: center;
 }
 
 .analysis-item-container {
@@ -20,6 +20,7 @@
   padding: 10px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+  text-align: center;
 }
 
 .analysis-item ul {
@@ -29,6 +30,7 @@
 .analysis-item li {
   font-size: var(--font-size-3);
   text-transform: capitalize;
+  text-align: center;
 }
 
 .analysis-item p {
@@ -37,10 +39,18 @@
 
 .charts {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
-.chart {
+.charts .chart {
   flex: 1;
   text-align: center;
+  width: 90%;
+}
+
+@media (max-width: 1024px) {
+  .charts {
+    flex-direction: column;
+  }
 }

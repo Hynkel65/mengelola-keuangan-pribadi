@@ -20,17 +20,17 @@ const Signup = () => {
 
     // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError('Passwords tidak sama');
       return;
     }
 
     // Attempt to sign up
     const success = await signup(formData);
     if (success) {
-      alert('Sign up successful! Please login with your credentials.');
+      alert('Sign up berhasil');
       window.location.reload();
     } else {
-      setError('Username is already taken');
+      setError('Username sudah digunakan');
     }
   };
 

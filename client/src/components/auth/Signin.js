@@ -21,7 +21,7 @@ const Signin = () => {
       window.location.reload();
     } else {
       // Set error message if sign-in fails
-      setError('Username or Password is not correct. Please Try Again');
+      setError('Username atau Password salah! Coba Lagi');
     }
   };
 
@@ -35,7 +35,6 @@ const Signin = () => {
         onChange={(e) => setFormData({ ...formData, username: e.target.value })}
         autoComplete="username"
       />
-
       <label htmlFor="password">Password</label>
       <input
         type="password"
@@ -43,10 +42,7 @@ const Signin = () => {
         name="password"
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
       />
-
-      {/* Display error message if any */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
       <button type="submit">Sign In</button>
     </form>
   );

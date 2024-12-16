@@ -13,14 +13,13 @@ function App() {
 
   return (
     <GlobalProvider>
-      {/* If the user is not authenticated, show authentication options */}
       {!isAuthenticated ? (
         <div className="auth-container">
           {showLogin ? (
             <>
               <Signin />
               <p>
-                Don't have an account?{' '}
+                Tidak punya akun?{' '}
                 <span
                   onClick={() => setShowLogin(false)}
                   style={{ color: '#00a2ff', cursor: 'pointer' }}
@@ -33,7 +32,7 @@ function App() {
             <>
               <Signup />
               <p>
-                Already have an account?{' '}
+                Sudah punya akun?{' '}
                 <span
                   onClick={() => setShowLogin(true)}
                   style={{ color: '#00a2ff', cursor: 'pointer' }}
@@ -45,7 +44,6 @@ function App() {
           )}
         </div>
       ) : (
-        // If the user is authenticated, show the Main component
         <Main />
       )}
     </GlobalProvider>

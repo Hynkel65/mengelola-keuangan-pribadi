@@ -4,6 +4,7 @@
   background-color: var(--background-color-2);
   color: var(--white);
   border-radius: var(--border-radius);
+  height: 100%;
 }
 
 .expense-con .total-expense-con {
@@ -16,8 +17,14 @@
 
 .expense-con .main-content {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* Default to row */
   max-height: 90vh;
+}
+
+@media (max-width: 1024px) { /* Adjust the breakpoint as needed */
+  .expense-con .main-content {
+    flex-direction: column; /* Change to column on smaller screens */
+  }
 }
 
 .expense-con .main-content .left-content {
