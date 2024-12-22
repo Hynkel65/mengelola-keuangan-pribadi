@@ -1,20 +1,23 @@
 .chart {
   background: var(--background-color-3);
   box-shadow: var(--box-shadow);
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: var(--border-radius);
-  height: 38vh;
-  place-items: center;
+  height: 400px;
+  width: 100%;
+  place-content: center;
 }
 
 .dashboard-con {
-  padding: 20px;
+  padding: 20px; /* Standardized padding */
   flex: 1;
   background-color: var(--background-color-2);
   color: var(--white);
-  border-radius: var(--border-radius);
   height: 100%;
+  align-items: center;
+  justify-content: center;
 }
+
 
 .con {
   background-color: var(--background-color-3);
@@ -27,6 +30,11 @@
   margin: 10px;
   padding: 20px;
   box-shadow: var(--box-shadow);
+  transition: transform 0.2s; /* Added transition for hover effect */
+}
+
+.con:hover {
+  transform: scale(1.02); /* Slightly scale on hover for effect */
 }
 
 .con span {
@@ -58,4 +66,13 @@
   color: var(--white);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+  padding: 10px; /* Added padding for better spacing */
+}
+
+.history-con input {
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--border-radius);
+  background-color: var(--background-color-2);
+  color: var(--white);
 }

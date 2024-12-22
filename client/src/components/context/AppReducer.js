@@ -34,7 +34,38 @@ const AppReducer = (state, action) => {
         isAuthenticated: false,
         user: null,
         incomes: [],
-        expenses: []
+        expenses: [],
+        budgets: [],
+      };
+
+      case 'GET_BUDGETS':
+      return {
+        ...state,
+        budgets: action.payload,
+        error: null
+      };
+
+    case 'ADD_BUDGET':
+      return {
+        ...state,
+        budgets: [...state.budgets, action.payload],
+        error: null
+      };
+
+    case 'UPDATE_BUDGET':
+      return {
+        ...state,
+        budgets: state.budgets.map(budget =>
+          budget._id === action.payload._id ? action.payload : budget
+        ),
+        error: null
+      };
+
+    case 'DELETE_BUDGET':
+      return {
+        ...state,
+        budgets: state.budgets.filter(budget => budget._id !== action.payload),
+        error: null
       };
 
     case 'GET_INCOMES':

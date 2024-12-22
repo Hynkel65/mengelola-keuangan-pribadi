@@ -25,7 +25,7 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 7;
+  const itemsPerPage = 10;
 
   // Sorting transactions based on sortConfig
   const sortedTransactions = [...transactions].sort((a, b) => {
@@ -71,10 +71,10 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
   const handleEditTransaction = (transaction) => {
     if (transaction.type === 'Income') {
       setSelectedIncome(transaction);
-      navigateTo('income');
+      navigateTo('pemasukan');
     } else if (transaction.type === 'Expense') {
       setSelectedExpense(transaction);
-      navigateTo('expense');
+      navigateTo('pengeluaran');
     }
   };
 
@@ -91,6 +91,21 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
     }
   };
 
+  const categories = [
+    { value: '', label: 'Semua Kategori'},
+    { value: '', label: 'PEMASUKAN', disabled: true },
+    { value: 'active_income', label: 'Pemasukan Aktif' },
+    { value: 'passive_income', label: 'Pemasukan Pasif' },
+    { value: 'other_income', label: 'Pemasukan Lainya' },
+    { value: '', label: 'PENGELUARAN', disabled: true },
+    { value: 'basic_needs', label: 'Kebutuhan Pokok' },
+    { value: 'education', label: 'Pendidikan' },
+    { value: 'entertainment', label: 'Hiburan' },
+    { value: 'social', label: 'Sosial' },
+    { value: 'finance', label: 'Keuangan' },
+    { value: 'unexpected_expenses', label: 'Pengeluaran Tidak Terduga' }
+  ];
+
   return (
     <div className="view-transactions-con">
       <div className="filter-container">
@@ -104,24 +119,22 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
         >
-          <option value="">Semua Kategori</option>
-          <option value="active_income">Pendapatan Aktif</option>
-          <option value="passive_income">Pendapatan Pasif</option>
-          <option value="other_income">Pendapatan Lainya</option>
-=======
-          <option value="basic_needs">Kebutuhan Pokok</option>
-          <option value="education">Pendidikan</option>
-          <option value="entertainment">Hiburan</option>
-          <option value="social">Sosial</option>
-          <option value="finance">Keuangan</option>
-          <option value="unexpected_expenses">Pengeluaran Tidak Terduga</option>
+          {categories.map((category) => (
+            <option 
+              key={category.value || category.label} 
+              value={category.value}
+              disabled={category.disabled}
+            >
+              {category.label}
+            </option>
+          ))}
         </select>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
         >
           <option value="">Semua Tipe</option>
-          <option value="Income">Pendapatan</option>
+          <option value="Income">Pemasukan</option>
           <option value="Expense">Pengeluaran</option>
         </select>
       </div>
@@ -134,12 +147,30 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
         <thead>
           <tr>
             <th>Gambar</th>
-            <th onClick={() => handleSort("title")}>Judul</th>
-            <th onClick={() => handleSort("description")}>Deskripsi</th>
-            <th onClick={() => handleSort("category")}>Kategori</th>
-            <th onClick={() => handleSort("amount")}>Jumlah</th>
-            <th onClick={() => handleSort("date")}>Tanggal</th>
-            <th onClick={() => handleSort("type")}>Tipe</th>
+            <th onClick={() => handleSort("title")}>
+              Judul {sortConfig.key === 'title' && 
+                (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+            </th>
+            <th onClick={() => handleSort("description")}>
+              Deskripsi {sortConfig.key === 'description' && 
+                (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+            </th>
+            <th onClick={() => handleSort("category")}>
+              Kategori {sortConfig.key === 'category' && 
+                (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+            </th>
+            <th onClick={() => handleSort("amount")}>
+              Jumlah {sortConfig.key === 'amount' && 
+                (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+            </th>
+            <th onClick={() => handleSort("date")}>
+              Tanggal {sortConfig.key === 'date' && 
+                (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+            </th>
+            <th onClick={() => handleSort("type")}>
+              Tipe {sortConfig.key === 'type' && 
+                (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+            </th>
             <th>Aksi</th>
           </tr>
         </thead>
@@ -162,10 +193,10 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
               </td>
               <td>{txn.title}</td>
               <td>{txn.description}</td>
-              <td>{txn.category}</td>
+              <td>{categories.find(category => category.value === txn.category).label}</td>
               <td>{moneyFormatter(txn.amount)}</td>
               <td>{new Date(txn.date).toLocaleDateString()}</td>
-              <td>{txn.type}</td>
+              <td>{txn.type === "Income" ? "Pemasukan" : "Pengeluaran"}</td>
               <td className="action-btn">
                 <button onClick={() => handleEditTransaction(txn)} className="edit-btn">
                   Edit

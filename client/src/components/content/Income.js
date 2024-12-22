@@ -156,9 +156,9 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
 
 // Options for income categories
 const incomeOptions = [
-  { value: 'active_income', label: 'Pendapatan Aktif' },
-  { value: 'passive_income', label: 'Pendapatan Pasif' },
-  { value: 'other_income', label: 'Pendapatan Lainya' },
+  { value: 'active_income', label: 'Pemasukan Aktif' },
+  { value: 'passive_income', label: 'Pemasukan Pasif' },
+  { value: 'other_income', label: 'Pemasukan Lainya' },
 ];
 
   // Calculate total income for the current month
@@ -174,9 +174,8 @@ const incomeOptions = [
 
   return (
     <div className="income-con">
-      <h1>Pendapatan</h1>
       <div className="total-income-con">
-        <h2>Pendapatan Bulan Ini</h2>
+        <h2>Pemasukan Bulan Ini</h2>
         <h3 className="total-income-text">{moneyFormatter(totalIncome)}</h3>
       </div>
       <div className="main-content">
@@ -193,7 +192,7 @@ const incomeOptions = [
           />
         </div>
         <div className="right-content">
-          <h3>Pendapatan Terkini</h3>
+          <h3>Pemasukan Terkini</h3>
           {recentIncomeData.map((income) => (
             <div key={income._id} className="history-item-con">
               <div className="history-item-details">
@@ -213,7 +212,7 @@ const incomeOptions = [
                         year: 'numeric',
                       })}
                     </span>
-                    <span className="category">{income.category}</span>
+                    <span className="category">{incomeOptions.find(option => option.value === income.category).label}</span>
                   </div>
                 </div>
                 <div className="edit">

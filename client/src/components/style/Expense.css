@@ -5,6 +5,7 @@
   color: var(--white);
   border-radius: var(--border-radius);
   height: 100%;
+  box-shadow: var(--box-shadow); /* Added shadow for depth */
 }
 
 .expense-con .total-expense-con {
@@ -43,7 +44,6 @@
   color: var(--white);
   border-radius: var(--border-radius);
   text-align: center;
-  padding: 5px;
   box-shadow: var(--box-shadow);
 }
 
@@ -55,6 +55,11 @@
   display: flex;
   align-items: center;
   margin: 10px;
+  transition: background 0.2s; /* Added transition for hover effect */
+}
+
+.expense-con .main-content .right-content .history-item-con:hover {
+  background: var(--background-color-3); /* Change background on hover */
 }
 
 .expense-con .main-content .right-content .history-item-con:hover {
@@ -116,5 +121,5 @@
 }
 
 .expense-con .amount {
-  color: #55efc4; /* You can replace this with a variable if needed */
+  color: var(--expense-color)
 }

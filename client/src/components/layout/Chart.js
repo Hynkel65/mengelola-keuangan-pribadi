@@ -48,7 +48,7 @@ function Chart() {
     labels: chartData.map(item => item.month),
     datasets: [
       {
-        label: 'Pendapatan',
+        label: 'Pemasukan',
         data: chartData.map(item => item.income),
         backgroundColor: 'green',
         borderColor: 'white',
@@ -88,6 +88,9 @@ function Chart() {
         },
         ticks: {
           color: '#fff',
+          autoSkip: false,
+          maxRotation: 45,
+          minRotation: 45
         },
       },
       y: {
@@ -105,6 +108,7 @@ function Chart() {
         hoverRadius: 8,
       },
     },
+    maintainAspectRatio: false
   };
 
   return (

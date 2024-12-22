@@ -63,7 +63,7 @@ function Main() {
             navigateTo={navigateTo}
           />
         )}
-        {activeButton === 'pendapatan' && (
+        {activeButton === 'pemasukan' && (
           <Income
             selectedIncome={selectedIncome}
             setSelectedIncome={setSelectedIncome}

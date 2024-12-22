@@ -12,8 +12,10 @@ const helmet = require('helmet');
 // Import routes and middleware
 const incomeRoutes = require('./routes/incomeRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
+const budgetRoutes = require('./routes/budgetRoutes');
 const userRoutes = require('./routes/userRoutes');
 const { requireAuth } = require('./middleware/authMiddleware');
+const { validateBudget, handleValidationErrors } = require('./middleware/budgetMiddleware');
 
 // Import database connection
 const connectDB = require('./config/db');
@@ -54,6 +56,7 @@ app.use(limiter);
 // Route handling
 app.use('/api/v1/incomes', requireAuth, incomeRoutes);
 app.use('/api/v1/expenses', requireAuth, expenseRoutes);
+app.use('/api/v1/budgets',requireAuth, validateBudget, budgetRoutes);
 app.use('/api/v1/users', userRoutes);
 
 // Development environment setup

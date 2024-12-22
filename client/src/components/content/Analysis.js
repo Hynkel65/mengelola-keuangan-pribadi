@@ -1,178 +1,298 @@
-import React, { useContext } from "react";
-import { Doughnut } from "react-chartjs-2";
+import React, { useContext, useState, useEffect } from "react";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  DoughnutController,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Doughnut, Bar } from "react-chartjs-2";
 import { GlobalContext } from "../context/GlobalState";
 import moneyFormatter from "../utils/MoneyFormatter";
+import BudgetTable from "../layout/BudgetTable";
+import { getMonthlyReport, getAnnualReport, getCategoryReport } from "../utils/FinancialReports";
 import "../style/Analysis.css";
 
+// Register Chart.js components
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  DoughnutController,
+  ArcElement,
+  Tooltip,
+  Legend
+);
+
 const Analysis = () => {
-  const { incomes, expenses } = useContext(GlobalContext);
+  const { budgets, incomes, expenses } = useContext(GlobalContext);
 
-  // Group transactions by month and calculate total amount for each month
-  const groupByMonth = (transactions) => {
-    return transactions.reduce((acc, txn) => {
-      const month = new Date(txn.date).toISOString().slice(0, 7);
-      acc[month] = (acc[month] || 0) + txn.amount;
-      return acc;
-    }, {});
-  };
+  const [categoryData, setCategoryData] = useState([]);
 
-  const incomeByMonth = groupByMonth(incomes);
-  const expenseByMonth = groupByMonth(expenses);
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
 
-  // Calculate the number of unique months with data
-  const totalMonths = new Set([
-    ...Object.keys(incomeByMonth),
-    ...Object.keys(expenseByMonth),
-  ]).size;
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
-  const monthsWithData = totalMonths || 1; // Ensure division by zero doesn't occur
-
-  // Calculate monthly averages
-  const monthlyAvgIncome = Math.round(
-    Object.values(incomeByMonth).reduce((a, b) => a + b, 0) / monthsWithData
+  const monthlyReport = getMonthlyReport(incomes, expenses, selectedMonth, selectedYear);
+  const categoryReport = getCategoryReport(
+    expenses.filter(expense => {
+      const expenseDate = new Date(expense.date);
+      return (
+        expenseDate.getMonth() === selectedMonth &&
+        expenseDate.getFullYear() === selectedYear
+      );
+    })
   );
 
-  const monthlyAvgExpense = Math.round(
-    Object.values(expenseByMonth).reduce((a, b) => a + b, 0) / monthsWithData
-  );
+  const annualReportData = getAnnualReport(incomes, expenses, selectedYear);
+  const annualReport = annualReportData.annualData;
 
-  const avgMonthlyBalance = Math.round(monthlyAvgIncome - monthlyAvgExpense);
+  // Calculate averages for annual report
+  const averageIncome = Math.round(annualReport.reduce((sum, data) => sum + data.totalIncome, 0) / 12);
+  const averageExpense = Math.round(annualReport.reduce((sum, data) => sum + data.totalExpense, 0) / 12);
+  const averageBalance = Math.round(annualReport.reduce((sum, data) => sum + data.balance, 0) / 12);
 
-  // Calculate total savings
-  const totalSavings = Math.round(
-    incomes.reduce((a, b) => a + b.amount, 0) -
-    expenses.reduce((a, b) => a + b.amount, 0)
-  );
-
-  // Group expenses by category
-  const expenseCategories = expenses.reduce((acc, txn) => {
-    acc[txn.category] = (acc[txn.category] || 0) + txn.amount;
-    return acc;
-  }, {});
-
-  // Get top 3 expense categories
-  const top3ExpenseCategories = Object.entries(expenseCategories)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3);
-
-  // Group incomes by category
-  const incomeCategoriesData = incomes.reduce((acc, txn) => {
-    acc[txn.category] = (acc[txn.category] || 0) + txn.amount;
-    return acc;
-  }, {});
-
-  // Prepare data for expense chart
-  const expenseChartData = {
-    labels: Object.keys(expenseCategories),
+  // Data for Doughnut Chart (Monthly Category Breakdown)
+  const doughnutChartData = {
+    labels: Object.keys(categoryReport).map(category => {
+      const categoryLabels = {
+        'basic_needs': 'Kebutuhan Pokok',
+        'education': 'Pendidikan',
+        'entertainment': 'Hiburan',
+        'social': 'Sosial',
+        'finance': 'Keuangan',
+        'unexpected_expenses': 'Pengeluaran Tidak Terduga'
+      };
+      return categoryLabels[category] || category;
+    }),
     datasets: [
       {
-        data: Object.values(expenseCategories).map((val) => Math.round(val)),
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50"],
+        data: Object.values(categoryReport),
+        backgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
+        ],
+        hoverBackgroundColor: [
+          "#CC506A",
+          "#2B82BE",
+          "#CCAC44",
+          "#3A9898",
+          "#7A52CC",
+          "#CC7F33",
+        ],
       },
     ],
   };
 
-  // Prepare data for income chart
-  const incomeChartData = {
-    labels: Object.keys(incomeCategoriesData),
+  const doughnutChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          color: "#fff",
+        }
+      },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: function(context) {
+            return moneyFormatter(context.raw);
+          }
+        }
+      }
+    },
+  };
+
+  // Data for Bar Chart (Annual Report)
+  const annualBarChartData = {
+    labels: annualReport.map(data => {
+      const months = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+      ];
+      return months[data.month - 1];
+    }),
     datasets: [
       {
-        data: Object.values(incomeCategoriesData).map((val) => Math.round(val)),
-        backgroundColor: ["#4CAF50", "#FFC107", "#FF9800", "#F44336"],
+        label: "Total Pemasukan",
+        data: annualReport.map(data => data.totalIncome),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+      {
+        label: "Total Pengeluaran",
+        data: annualReport.map(data => data.totalExpense),
+        backgroundColor: "rgba(255, 99, 132, 0.6)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const barChartOptions = {
+    plugins: {
+      legend: {
+        labels: {
+          color: '#ffffff', // Light text
+        },
+      },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: function(context) {
+            return moneyFormatter(context.raw);
+          }
+        }
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#ffffff', // Light text
+        },
+        grid: {
+          color: '#555555', // Subtle grid lines
+        },
+      },
+      y: {
+        ticks: {
+          color: '#ffffff', // Light text
+        },
+        grid: {
+          color: '#555555', // Subtle grid lines
+        },
+      },
+    },
+  };
+
+  // Calculate budget vs actual spending for each category
+  useEffect(() => {
+    const data = budgets.map(budget => {
+      const totalSpent = expenses
+        .filter(expense => 
+          expense.category === budget.category &&
+          new Date(expense.date).getMonth() === selectedMonth
+        )
+        .reduce((total, expense) => total + expense.amount, 0);
+      return {
+        category: budget.category,
+        budget: budget.amount,
+        spent: totalSpent,
+      };
+    });
+    setCategoryData(data);
+  }, [budgets, expenses, selectedMonth]);
+
+  // Data for Bar Chart (Budget vs Actual Spending)
+  const chartData = {
+    labels: categoryData.map(item => {
+      const categoryLabels = {
+        'basic_needs': 'Kebutuhan Pokok',
+        'education': 'Pendidikan',
+        'entertainment': 'Hiburan',
+        'social': 'Sosial',
+        'finance': 'Keuangan',
+        'unexpected_expenses': 'Pengeluaran Tidak Terduga'
+      };
+      return categoryLabels[item.category] || item.category;
+    }),
+    datasets: [
+      {
+        label: "Anggaran",
+        data: categoryData.map(item => item.budget),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+      {
+        label: "Uang yang terpakai",
+        data: categoryData.map(item => item.spent),
+        backgroundColor: "rgba(255, 99, 132, 0.6)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
       },
     ],
   };
 
   return (
     <div className="analysis-con">
-      <div className="analysis-item">
-        <h2>Rata-rata tiap bulan</h2>
-        <p>Rata-rata Pendapatan: {moneyFormatter(monthlyAvgIncome)}</p>
-        <p>Rata-rata Pengeluaran: {moneyFormatter(monthlyAvgExpense)}</p>
-        <p>Rata-rata Saldo: {moneyFormatter(avgMonthlyBalance)}</p>
-      </div>
-      <div className="charts">
-        <div className="chart">
-          <Doughnut 
-            data={incomeChartData} 
-            options={{
-              plugins: {
-                legend: {
-                  labels: { 
-                    color: 'white' 
-                  }
-                },
-                title: {
-                  display: true,
-                  text: 'Distribusi Pendapatan',
-                  color: '#00A2FF',
-                  font: {
-                    size: 18,
-                  },
-                },
-                tooltip: {
-                  enabled: true,
-                  callbacks: {
-                    label: function(context) {
-                      return moneyFormatter(context.raw);
-                    }
-                  }
-                }
-              },
-              responsive: true,
-              maintainAspectRatio: false
-            }} 
-          />
-        </div>
-        <div className="chart">
-          <Doughnut 
-            data={expenseChartData} 
-            options={{
-              plugins: {
-                legend: {
-                  labels: { 
-                    color: 'white' 
-                  }
-                },
-                title: {
-                  display: true,
-                  text: 'Distribusi Pengeluaran',
-                  color: '#00A2FF',
-                  font: {
-                    size: 18,
-                  },
-                },
-                tooltip: {
-                  enabled: true,
-                  callbacks: {
-                    label: function(context) {
-                      return moneyFormatter(context.raw);
-                    }
-                  }
-                }
-              },
-              responsive: true,
-              maintainAspectRatio: false
-            }} 
-          />
+
+      {/* Laporan per tahun */}
+      <div className="annual-report-con">
+        <h2>Laporan Tahunan</h2>
+        <div className="annual-select">
+            <label htmlFor="year">Pilih Tahun:</label>
+            <select
+              id="year"
+              value={selectedYear}
+              onChange={e => setSelectedYear(parseInt(e.target.value))}
+            >
+              {Array.from({ length: 5 }, (_, i) => (
+                <option key={i} value={currentYear - i}>
+                  {currentYear - i}
+                </option>
+              ))}
+            </select>
+          </div>
+        <div className="annual-report">
+          <div className="annual-summary">
+            <h2>Rata-rata</h2>
+            <h3>Pemasukan:<span> {moneyFormatter(averageIncome)}</span></h3>
+            <h3>Pengeluaran:<span> {moneyFormatter(averageExpense)}</span></h3>
+            <h3>Saldo:<span> {moneyFormatter(averageBalance)}</span></h3>
+          </div>
+          <Bar data={annualBarChartData} options={barChartOptions} />
         </div>
       </div>
-      <div className="analysis-item-container">
-        <div className="analysis-item">
-          <h2>Top 3 Kategori Pengeluaran</h2>
-          <ul>
-            {top3ExpenseCategories.map(([category, amount], index) => (
-              <li key={index}>
-                {category}: {moneyFormatter(Math.round(amount))}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="analysis-item">
-          <h2>Saldo Total</h2>
-          <p>{moneyFormatter(totalSavings)}</p>
+
+      {/* Laporan per bulan */}
+      <div className="monthly-report-con">
+        <h2>Laporan Bulanan</h2>
+        <div className="monthly-select">
+            <label htmlFor="month">Pilih Bulan:</label>
+            <select
+              id="month"
+              value={selectedMonth}
+              onChange={e => setSelectedMonth(parseInt(e.target.value))}
+            >
+              {Array.from({ length: 12 }, (_, i) => (
+                <option key={i} value={i}>
+                  {new Date(0, i).toLocaleString("default", { month: "long" })}
+                </option>
+              ))}
+            </select>
+          </div>
+        <div className="monthly-report">
+          <div className="monthly-summary">
+            <h2>Total</h2>
+            <h3>Pemasukan: <span>{moneyFormatter(monthlyReport.totalIncome)}</span></h3>
+            <h3>Pengeluaran: <span>{moneyFormatter(monthlyReport.totalExpense)}</span></h3>
+            <h3>Saldo: <span>{moneyFormatter(monthlyReport.balance)}</span></h3>
+          </div>
+          <div className="monthly-chart">
+            <Doughnut data={doughnutChartData} options={doughnutChartOptions} />
+          </div>
         </div>
       </div>
+
+      {/* Anggaran */}
+        <div className="budget-con">
+          <h2>Anggaran</h2>
+          <BudgetTable className="budgetTable-con"/>
+          <Bar data={chartData} options={barChartOptions} className="budgetBar-con"/>
+        </div>
     </div>
   );
 };

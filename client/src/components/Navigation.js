@@ -22,7 +22,7 @@ const Navigation = ({ activeButton, handleButtonClick }) => {
         { name: 'dashboard', label: 'Dashboard' },
         { name: 'analisis', label: 'Analisis' },
         { name: 'riwayat', label: 'Riwayat' },
-        { name: 'pendapatan', label: 'Pendapatan' },
+        { name: 'pemasukan', label: 'Pemasukan' },
         { name: 'pengeluaran', label: 'Pengeluaran' },
       ].map(({ name, label }) => (
         <div key={name} className="choose-nav">

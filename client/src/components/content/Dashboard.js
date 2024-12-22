@@ -49,7 +49,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-con">
-        <Chart />
+      <Chart />
       <div className="main-content">
         <div className="left-content">
           <div className="con">
@@ -57,7 +57,7 @@ const Dashboard = () => {
             <h3>{moneyFormatter(totalIncome - totalExpense)}</h3>
           </div>
           <div className="con">
-            <h2>Pendapatan</h2><span>bulan ini</span>
+            <h2>Pemasukan</h2><span>bulan ini</span>
             <h3>{moneyFormatter(totalIncomeThisMonth)}</h3>
           </div>
           <div className="con">

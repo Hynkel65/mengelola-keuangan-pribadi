@@ -6,6 +6,7 @@ import axios from 'axios';
 const initialState = {
   incomes: [],
   expenses: [],
+  budgets: [],
   error: null,
   isAuthenticated: JSON.parse(localStorage.getItem('isAuthenticated')) || false,
   user: JSON.parse(localStorage.getItem('user')) || null,
@@ -82,6 +83,57 @@ export const GlobalProvider = ({ children }) => {
     };
     checkAuthStatus();
   }, []);
+
+  // Fetch budgets from the server
+  const getBudgets = async () => {
+    try {
+      const res = await axios.get('/api/v1/budgets');
+      dispatch({ type: 'GET_BUDGETS', payload: res.data.data });
+    } catch (error) {
+      console.error('Error fetching budgets:', error.response?.data?.error);
+      dispatch({ type: 'TRANSACTION_ERROR', payload: error.response.data.error });
+    }
+  };
+
+  // Add a new budget
+  const addBudget = async (budgetData) => {
+    try {
+      const res = await axios.post('/api/v1/budgets', budgetData);
+      dispatch({ type: 'ADD_BUDGET', payload: res.data.data });
+    } catch (error) {
+      console.error('Error adding budget:', error.response?.data?.error);
+      dispatch({ type: 'TRANSACTION_ERROR', payload: error.response.data.error });
+    }
+  };
+
+  // Update a budget by ID
+  const updateBudget = async (id, updatedBudgetData) => {
+    try {
+      const response = await axios.patch(`/api/v1/budgets/${id}`, updatedBudgetData);
+      dispatch({ type: 'UPDATE_BUDGET', payload: response.data.data });
+    } catch (error) {
+      console.error('Error updating budget:', error);
+      throw error;
+    }
+  };
+
+  // Delete a budget by ID
+  const deleteBudget = async (id) => {
+    try {
+      await axios.delete(`/api/v1/budgets/${id}`);
+      dispatch({ type: 'DELETE_BUDGET', payload: id });
+    } catch (error) {
+      console.error('Error deleting budget:', error.response.data.error);
+      dispatch({ type: 'TRANSACTION_ERROR', payload: error.response.data.error });
+    }
+  };
+
+  // Fetch budgets if authenticated
+  useEffect(() => {
+    if (state.isAuthenticated) {
+      getBudgets();
+    }
+  }, [state.isAuthenticated]);
 
   // Fetch incomes from the server
   const getIncomes = async () => {
@@ -203,12 +255,17 @@ export const GlobalProvider = ({ children }) => {
       value={{
         incomes: state.incomes,
         expenses: state.expenses,
+        budgets: state.budgets,
         error: state.error,
         isAuthenticated: state.isAuthenticated,
         user: state.user,
         signin,
         signup,
         signout,
+        addBudget,
+        updateBudget,
+        deleteBudget,
+        getBudgets,
         getIncomes,
         getExpenses,
         addIncome,

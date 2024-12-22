@@ -133,30 +133,33 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
     });
   };
 
-  // Get recent expenses and calculate the total expense for the current month
+  // Get recent expenses
   const recentExpenseData = expenses.slice(-4).reverse();
-  const currentDate = new Date();
-  const totalExpense = expenses.reduce((total, expense) => {
-    const expenseDate = new Date(expense.date);
-    return (expenseDate.getMonth() === currentDate.getMonth() &&
-      expenseDate.getFullYear() === currentDate.getFullYear())
-      ? total + parseFloat(expense.amount)
-      : total;
-  }, 0);
 
-// Expense category options
+  // Expense category options
 const expenseOptions = [
   { value: 'basic_needs', label: 'Kebutuhan Pokok' },
   { value: 'education', label: 'Pendidikan' },
+  { value: 'health', label: 'Kesehatan' },
   { value: 'entertainment', label: 'Hiburan' },
   { value: 'social', label: 'Sosial' },
   { value: 'finance', label: 'Keuangan' },
   { value: 'unexpected_expenses', label: 'Pengeluaran Tidak Terduga' },
 ];
 
+  // Calculate the total expense for the current month
+  const currentDate = new Date();
+  const totalExpense = expenses.reduce((total, expense) => {
+    const expenseDate = new Date(expense.date);
+    if (expenseDate.getMonth() === currentDate.getMonth() &&
+        expenseDate.getFullYear() === currentDate.getFullYear()) {
+      return total + parseFloat(expense.amount);
+    }
+    return total;
+  }, 0);
+
   return (
     <div className="expense-con">
-      <h1>Pengeluaran</h1>
       <div className="total-expense-con">
         <h2>Pengeluaran Bulan Ini</h2>
         <h3 className="total-expense-text">{moneyFormatter(totalExpense)}</h3>
@@ -195,7 +198,7 @@ const expenseOptions = [
                         year: 'numeric',
                       })}
                     </span>
-                    <span className="category">{expense.category}</span>
+                    <span className="category">{expenseOptions.find(option => option.value === expense.category).label}</span>
                   </div>
                 </div>
                 <div className="edit">

@@ -14,9 +14,12 @@
     --background-color-3: #2d4669;
     --background-color-4: #272d43;
     --white: #fff;
-    --button-hover-color: #0382cc;
-    --error-color: red;
+    --edit-btn-color: #00A2FF;
+    --edit-btn-hover-color: #0382cc;
+    --delete-btn-color: #FF5500;
+    --delete-btn-hover-color: #d94800;
+    --error-color: #FF0000;
     --income-color: #55efc4;
-    --expense-color: #d63031;
+    --expense-color: #F07956;
     --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
 }

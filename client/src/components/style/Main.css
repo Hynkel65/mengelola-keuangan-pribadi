@@ -11,6 +11,7 @@ body {
   background-color: var(--background-color-1);
   font-family: var(--font-family);
   color: var(--white);
+  line-height: 1.6; /* Improved readability */
 }
 
 h1 {
@@ -33,6 +34,7 @@ h3 {
   text-align: center;
   text-transform: uppercase;
   font-weight: bold;
+  margin: 0 0 10px 0;
 }
 
 p {
@@ -40,27 +42,26 @@ p {
 }
 
 button {
-  padding: 10px;
-  background-color: var(--primary-color);
+  padding: 10px 15px; /* Standardized padding for consistency */
+  background-color: var(--edit-btn-color);
   border: none;
-  padding: 10px 20px;
   color: var(--white);
   font-size: var(--font-size-4);
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: var(--border-radius); /* Use theme variable */
   transition: background-color 0.2s ease;
 }
 
 button:hover {
-background-color: var(--button-hover-color);
+background-color: var(--edit-btn-hover-color);
 }
 
 .delete-btn {
-  background-color: #ff0000 !important;
+  background-color: var(--delete-btn-color) !important;
 }
 
 .delete-btn:hover{
-  background-color: rgb(190, 0, 0) !important;
+  background-color: var(--delete-btn-hover-color) !important;
 }
 
 .toggle-button {
@@ -75,8 +76,9 @@ background-color: var(--button-hover-color);
   display: flex;
   flex-direction: row; /* Default to row */
   justify-content: center;
-  margin: 2em;
+  margin: 20px; /* Standardized margin */
   height: 90vh;
+  border-radius: var(--border-radius); /* Ensure border-radius is consistent */
 }
 
 @media (max-width: 1024px) { /* Adjust the breakpoint as needed */
@@ -138,6 +140,8 @@ background-color: var(--button-hover-color);
   flex: 1;
   margin-top: 20px;
   text-align: center;
+  background-color: var(--background-color-3); /* Added background color */
+  padding: 15px; /* Added padding for better spacing */
 }
 
 .container .left-con .header .header-title {
@@ -156,6 +160,8 @@ background-color: var(--button-hover-color);
 
 .container .left-con .navigation .choose-nav {
   background-color: var(--background-color-1);
+  padding: 10px; /* Added padding for consistency */
+  border-radius: var(--border-radius); /* Use theme variable */
   height: 3em;
   width: 100%;
   font-size: var(--font-size-3);
@@ -190,13 +196,11 @@ background-color: var(--button-hover-color);
 .container .right-con {
   display: flex;
   flex-direction: row;
-  flex: 4;
+  flex: 5;
   background-color: var(--background-color-2);
   padding: 10px;
-  margin-right: 20px;
-  margin-left: 20px;
+  margin: 0 20px 0 20px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  height: 90vh;
   overflow-y: auto;
 }

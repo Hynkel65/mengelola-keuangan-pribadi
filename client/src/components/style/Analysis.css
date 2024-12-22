@@ -1,56 +1,153 @@
 .analysis-con {
-  padding: 20px;
-  flex: 1;
+  display: flex;
+  flex-direction: column;
   background-color: var(--background-color-2);
-  color: var(--white);
-  border-radius: var(--border-radius);
-  width: 100%;
+  padding: 20px; /* Standardized padding */
+  border-radius: var(--border-radius); /* Ensure border-radius is consistent */
 }
 
-.analysis-item-container {
+.budget-con {
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  background-color: var(--background-color-3);
+  padding: 20px;
+}
+
+.budgetTable-con {
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  background-color: var(--background-color-2);
+  padding: 20px;
+}
+
+.budgetBar-con {
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  background-color: var(--background-color-2);
+  padding: 20px;
+}
+
+.monthly-report-con,
+.annual-report-con {
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  background-color: var(--background-color-3);
+  margin: 10px 0 10px 0;
+}
+
+.monthly-report,
+.annual-report {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  gap: 20px;
+  padding: 10px; /* Added padding for better spacing */
 }
 
-.analysis-item,
-.charts {
-  flex: 1 1 auto;
-  margin: 10px;
+.monthly-summary,
+.annual-summary {
+  flex: 2;
+  height: 100%;
   padding: 10px;
+  background-color: var(--background-color-2);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  text-align: center;
+  margin: 10px; /* Added margin for spacing */
 }
 
-.analysis-item ul {
-  list-style-type: none;
+.monthly-summary h3 {
+  color: var(--primary-color);
+  text-align: left;
 }
 
-.analysis-item li {
-  font-size: var(--font-size-3);
-  text-transform: capitalize;
-  text-align: center;
+.monthly-summary span {
+  color: var(--white);
 }
 
-.analysis-item p {
-  font-size: 32px;
+.annual-summary {
+  flex-direction: row;
+  padding: 10px;
 }
 
-.charts {
-  display: flex;
-  align-items: center;
-  width: 100%;
+.annual-summary h3 {
+  color: var(--primary-color);
+  text-align: left;
 }
 
-.charts .chart {
+.annual-summary span {
+  color: var(--white);
+}
+
+.monthly-chart,
+.annual-bar-chart {
   flex: 1;
-  text-align: center;
-  width: 90%;
+  max-width: fit-content;
+  padding: 10px;
+  background-color: var(--background-color-2);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin: 10px; /* Added margin for spacing */
 }
 
-@media (max-width: 1024px) {
-  .charts {
+.monthly-select,
+.annual-select {
+  flex: 1;
+  padding: 10px;
+  background-color: var(--background-color-2);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px; /* Added margin for spacing */
+}
+
+@media (max-width: 768px) {
+  .monthly-report,
+  .annual-report {
     flex-direction: column;
   }
+
+  .monthly-summary,
+  .monthly-chart,
+  .annual-summary,
+  .annual-bar-chart {
+    flex: unset;
+    width: 100%;
+  }
+}
+
+.budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: var(--background-color-2);
+  border-radius: var(--border-radius);
+}
+
+.budget-table th,
+.budget-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--background-color-3);
+}
+
+.budget-table input {
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--border-radius);
+  background-color: var(--background-color-3);
+  color: var(--white);
+}
+
+.budget-table button {
+  margin: 0 5px;
+  padding: 8px 15px;
+  transition: background-color 0.2s ease; /* Added transition for hover effect */
+}
+
+.budget-table button:hover {
+  background-color: var(--edit-btn-hover-color); /* Change to hover color */
 }
