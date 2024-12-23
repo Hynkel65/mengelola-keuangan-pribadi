@@ -80,29 +80,43 @@ exports.deleteExpense = async (req, res, next) => {
         });
 
         if (!expense) {
-            // If no expense is found, send a 404 response
+            // If no expense found, respond with an error
             return res.status(404).json({
                 success: false,
                 error: 'No transaction found'
             });
         }
 
-        // Remove the expense
+        // Delete the associated image file if it exists
+        if (expense.image) {
+            const imagePath = path.join(__dirname, '../uploads', expense.image);
+            try {
+                if (expense.image) {
+                    fs.unlinkSync(imagePath);
+                }
+            } catch (err) {
+                console.error('Error deleting image file:', err.message);
+            }
+            
+        }
+
+        // Remove the expense record
         await expense.remove();
 
-        // Send a successful response
+        // Respond with success
         return res.status(200).json({
             success: true,
             data: {}
         });
     } catch (err) {
-        // Handle errors and send a server error response
+        // Handle any server errors
         return res.status(500).json({
             success: false,
             error: 'Server Error'
         });
     }
-}
+};
+
 
 // @desc    Update an existing expense
 // @route   PATCH /api/v1/expenses/:id
@@ -124,17 +138,21 @@ exports.updateExpense = async (req, res, next) => {
         }
 
         // Update the expense fields
-        expense.title = req.body.title;
-        expense.amount = req.body.amount;
-        expense.date = req.body.date;
-        expense.category = req.body.category;
-        expense.description = req.body.description;
+        expense.title = req.body.title || expense.title;
+        expense.amount = req.body.amount || expense.amount;
+        expense.date = req.body.date || expense.date;
+        expense.category = req.body.category || expense.category;
+        expense.description = req.body.description || expense.description;
 
         // If a new image is uploaded, delete the old one and update the image field
         if (req.file) {
             if (expense.image) {
-                const oldImagePath = path.join(__dirname, '../uploads', expense.image);
-                fs.unlinkSync(oldImagePath);
+                try {
+                    const oldImagePath = path.join(__dirname, '../uploads', expense.image);
+                    fs.unlinkSync(oldImagePath);
+                } catch (err) {
+                    console.error('Error deleting old image:', err.message);
+                }
             }
             expense.image = req.file.filename;
         }

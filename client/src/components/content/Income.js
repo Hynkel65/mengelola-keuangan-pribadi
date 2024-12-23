@@ -112,42 +112,42 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
   // Handle form submission for updating income
   const handleUpdateIncome = async (event) => {
     event.preventDefault();
-    if (selectedIncome) {
-      try {
-        const formattedDate = new Date(formValues.date);
-        let updatedFormData = {
-          title: formValues.title,
-          amount: formValues.amount,
-          date: formattedDate.toISOString(),
-          category: formValues.category,
-          description: formValues.description,
-        };
-
-        if (formValues.image) {
-          updatedFormData.image = formValues.image;
-        }
-
-        await updateIncome(selectedIncome._id, updatedFormData);
-
-        // Reset form values after update
-        setFormValues({
-          title: '',
-          amount: '',
-          date: '',
-          category: '',
-          description: '',
-          image: null,
-        });
-
-        setFormMode("add");
-        setSelectedIncome(null);
-        alert('Income data has been successfully updated.');
-      } catch (error) {
-        console.error('Error updating income:', error);
-        alert('Failed to update income. Please try again.');
-      }
-    } else {
+    if (!selectedIncome) {
       console.error('No income selected for update');
+      return;
+    }
+    try {
+      const formattedDate = new Date(formValues.date);
+      let updatedFormData = {
+        title: formValues.title,
+        amount: formValues.amount,
+        date: formattedDate.toISOString(),
+        category: formValues.category,
+        description: formValues.description,
+      };
+
+      if (formValues.image) {
+        updatedFormData.image = formValues.image;
+      }
+
+      await updateIncome(selectedIncome._id, updatedFormData);
+
+      // Reset form values after update
+      setFormValues({
+        title: '',
+        amount: '',
+        date: '',
+        category: '',
+        description: '',
+        image: null,
+      });
+
+      setFormMode("add");
+      setSelectedIncome(null);
+      alert('Pemasukan berhasil diperbarui.');
+    } catch (error) {
+      console.error('Error updating income:', error);
+      alert('Failed to update income. Please try again.');
     }
   };
 

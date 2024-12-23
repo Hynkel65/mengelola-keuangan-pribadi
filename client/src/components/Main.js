@@ -46,7 +46,7 @@ function Main() {
   return (
     <div className="container">
       <button className="toggle-button" onClick={toggleNavbar}>
-        {isNavVisible ? 'Hide' : 'Show'} Menu
+        {isNavVisible ? 'Sembunyikan' : 'Tampilkan'} Menu
       </button>
       <div className={`left-con ${isNavVisible ? '' : 'collapsed'}`}>
         <Header />

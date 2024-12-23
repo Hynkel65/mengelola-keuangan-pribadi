@@ -114,7 +114,7 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
       resetFormValues();
       setFormMode("add");
       setSelectedExpense(null);
-      alert('Expense data has been successfully updated.');
+      alert('Pengeluaran berhasil diperbarui.');
     } catch (error) {
       console.error('Error updating expense:', error);
       alert('Failed to update expense. Please try again.');

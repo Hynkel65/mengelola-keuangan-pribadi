@@ -20,7 +20,18 @@ router
 router
     .route('/:id')
     .delete(deleteExpense) // DELETE request to remove an expense by ID
-    .patch(updateExpense); // PATCH request to update an expense by ID
+    .patch(upload.single('image'), (req, res, next) => {
+        if (req.file && req.file.mimetype.startsWith('image/')) {
+            // File is valid; proceed to controller
+            next();
+        } else if (req.file) {
+            // Invalid file type
+            return res.status(400).json({ success: false, error: 'Invalid file type. Only images are allowed.' });
+        } else {
+            // No file uploaded; continue with updating other fields
+            next();
+        }
+    }, updateExpense); // PATCH request to update an expense by ID
 
 // Export the router to be used in other parts of the application
 module.exports = router;

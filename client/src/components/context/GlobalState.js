@@ -229,16 +229,22 @@ export const GlobalProvider = ({ children }) => {
   // Update an expense by ID
   const updateExpense = async (id, updatedExpenseData) => {
     try {
+      const formData = new FormData();
+  
+      // Append all key-value pairs to the FormData
+      for (const key in updatedExpenseData) {
+        formData.append(key, updatedExpenseData[key]);
+      }
+  
       const response = await fetch(`/api/v1/expenses/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedExpenseData),
+        body: formData, // FormData includes content-type automatically
       });
+  
       if (!response.ok) {
         throw new Error(`Failed to update expense: ${response.status} ${response.statusText}`);
       }
+  
       const updatedExpense = await response.json();
       dispatch({ type: 'UPDATE_EXPENSE', payload: updatedExpense.data });
       return updatedExpense;

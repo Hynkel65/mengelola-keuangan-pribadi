@@ -9,9 +9,9 @@ const DeleteConfirmationModal = ({ show, onClose, onDelete }) => {
     <div className="modal-container">
       <div className="modal">
         <div className="modal-content">
-          <p>Are you sure you want to delete this? This action can't be undone.</p>
-          <button onClick={onDelete}>Yes, Delete</button>
-          <button onClick={onClose}>Cancel</button>
+          <p>Apakah Anda yakin ingin menghapus ini? Tindakan ini tidak dapat dibatalkan.</p>
+          <button onClick={onDelete}>Ya, Hapus</button>
+          <button onClick={onClose}>Batal</button>
         </div>
       </div>
     </div>
