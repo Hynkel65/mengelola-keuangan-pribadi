@@ -1,9 +1,11 @@
 .analysis-con {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--background-color-2);
   padding: 20px; /* Standardized padding */
-  border-radius: var(--border-radius); /* Ensure border-radius is consistent */
+  flex: 1;
+  background-color: var(--background-color-2);
+  color: var(--white);
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 .budget-con {

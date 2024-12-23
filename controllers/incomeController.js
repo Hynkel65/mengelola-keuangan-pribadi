@@ -90,7 +90,14 @@ exports.deleteIncome = async (req, res, next) => {
         // Delete the associated image file if it exists
         if (income.image) {
             const imagePath = path.join(__dirname, '../uploads', income.image);
-            fs.unlinkSync(imagePath);
+            try {
+                if (income.image) {
+                    fs.unlinkSync(imagePath);
+                }
+            } catch (err) {
+                console.error('Error deleting image file:', err.message);
+            }
+            
         }
 
         // Remove the income record
@@ -122,7 +129,6 @@ exports.updateIncome = async (req, res, next) => {
         });
 
         if (!income) {
-            // If no income found, respond with an error
             return res.status(404).json({
                 success: false,
                 error: 'No income found'
@@ -130,31 +136,36 @@ exports.updateIncome = async (req, res, next) => {
         }
 
         // Update income fields with request data
-        income.title = req.body.title;
-        income.amount = req.body.amount;
-        income.date = req.body.date;
-        income.category = req.body.category;
-        income.description = req.body.description;
+        income.title = req.body.title || income.title;
+        income.amount = req.body.amount || income.amount;
+        income.date = req.body.date || income.date;
+        income.category = req.body.category || income.category;
+        income.description = req.body.description || income.description;
 
-        // Handle image update if a new image is provided
+        // Handle image upload
         if (req.file) {
+            // Delete the old image if it exists
             if (income.image) {
-                const oldImagePath = path.join(__dirname, '../uploads', income.image);
-                fs.unlinkSync(oldImagePath);
+                try {
+                    const oldImagePath = path.join(__dirname, '../uploads', income.image);
+                    fs.unlinkSync(oldImagePath);
+                } catch (err) {
+                    console.error('Error deleting old image:', err.message);
+                }
             }
+            // Save the new image path
             income.image = req.file.filename;
         }
 
         // Save the updated income
         await income.save();
 
-        // Respond with the updated income data
         return res.status(200).json({
             success: true,
             data: income
         });
     } catch (err) {
-        // Handle any server errors
+        console.error('Error updating income:', err.message);
         return res.status(500).json({
             success: false,
             error: 'Server Error'

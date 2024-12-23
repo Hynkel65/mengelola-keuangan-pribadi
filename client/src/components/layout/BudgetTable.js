@@ -31,14 +31,17 @@ const BudgetTable = () => {
         }
     };
 
-    const handleUpdateBudget = async (budgetId, amount) => {
+    const handleUpdateBudget = async (budgetId, amount, category) => {
         try {
             await updateBudget(budgetId, {
                 amount: parseFloat(amount),
+                category: category, // Include category in the update
             });
             setEditMode(null);
+            alert('Data anggaran berhasil diperbarui.');
         } catch (error) {
             console.error('Error updating budget:', error);
+            alert('Gagal memperbarui data anggaran. Silakan coba lagi.');
         }
     };
 
@@ -73,7 +76,7 @@ const BudgetTable = () => {
                                 {existingBudget ? (
                                     <>
                                         {editMode === category.value ? (
-                                            <button onClick={() => handleUpdateBudget(existingBudget._id, budgetAmount)}>
+                                            <button onClick={() => handleUpdateBudget(existingBudget._id, budgetAmount, category.value)}>
                                                 Simpan
                                             </button>
                                         ) : (

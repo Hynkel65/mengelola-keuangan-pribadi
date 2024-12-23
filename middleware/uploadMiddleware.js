@@ -1,20 +1,40 @@
+const fs = require('fs');
 const multer = require('multer');
+const path = require('path');
 
-// Configure storage settings for multer
+// Ensure the uploads directory exists
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Configure storage settings
 const storage = multer.diskStorage({
-    // Set destination for uploaded files
     destination: function (req, file, cb) {
-        cb(null, './uploads'); // Store files in the 'uploads' directory
+        cb(null, uploadDir);
     },
-    // Set filename for uploaded files
     filename: function (req, file, cb) {
-        // Use current timestamp and original file name to create a unique file name
         cb(null, Date.now() + '-' + file.originalname);
-    }
+    },
 });
 
-// Create multer instance with the defined storage settings
-const upload = multer({ storage: storage });
+// Add file type validation
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif/; // Allowed file extensions
+    const mimeType = allowedTypes.test(file.mimetype);
+    const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
 
-// Export the multer instance for use in other modules
+    if (mimeType && extName) {
+        cb(null, true); // Accept the file
+    } else {
+        cb(new Error('Only image files (JPEG, JPG, PNG, GIF) are allowed!'), false);
+    }
+};
+
+// Create the multer instance with storage and fileFilter
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+});
+
 module.exports = upload;

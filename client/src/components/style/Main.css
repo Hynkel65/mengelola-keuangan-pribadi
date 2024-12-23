@@ -101,6 +101,7 @@ background-color: var(--edit-btn-hover-color);
 
   .right-con {
     margin-top: 0; /* Add this */
+    min-width: 90%;
   }
 
   .toggle-button {
@@ -203,4 +204,5 @@ background-color: var(--edit-btn-hover-color);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   overflow-y: auto;
+  max-width: 100%;
 }

@@ -200,16 +200,22 @@ export const GlobalProvider = ({ children }) => {
   // Update an income by ID
   const updateIncome = async (id, updatedIncomeData) => {
     try {
+      const formData = new FormData();
+  
+      // Append all key-value pairs to the FormData
+      for (const key in updatedIncomeData) {
+        formData.append(key, updatedIncomeData[key]);
+      }
+  
       const response = await fetch(`/api/v1/incomes/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedIncomeData),
+        body: formData, // FormData includes content-type automatically
       });
+  
       if (!response.ok) {
         throw new Error(`Failed to update income: ${response.status} ${response.statusText}`);
       }
+  
       const updatedIncome = await response.json();
       dispatch({ type: 'UPDATE_INCOME', payload: updatedIncome.data });
       return updatedIncome;
@@ -218,6 +224,7 @@ export const GlobalProvider = ({ children }) => {
       throw error;
     }
   };
+  
 
   // Update an expense by ID
   const updateExpense = async (id, updatedExpenseData) => {

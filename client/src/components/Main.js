@@ -12,11 +12,11 @@ import Expense from './content/Expense';
 function Main() {
   // State to track the active tab
   const [activeButton, setActiveButton] = useState('dashboard');
-  const [isNavVisible, setIsNavVisible] = useState(window.innerWidth > 768); // State for navbar visibility
+  const [isNavVisible, setIsNavVisible] = useState(window.innerWidth > 1024);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsNavVisible(window.innerWidth > 768);
+      setIsNavVisible(window.innerWidth > 1024);
     };
   
     window.addEventListener('resize', handleResize);
@@ -26,7 +26,7 @@ function Main() {
   // Handler to update active tab based on button click
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
-    setIsNavVisible(window.innerWidth > 768);
+    setIsNavVisible(window.innerWidth > 1024);
   };
 
   // Toggles the visibility of the navbar

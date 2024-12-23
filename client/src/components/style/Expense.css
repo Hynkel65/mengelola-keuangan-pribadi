@@ -5,7 +5,6 @@
   color: var(--white);
   border-radius: var(--border-radius);
   height: 100%;
-  box-shadow: var(--box-shadow); /* Added shadow for depth */
 }
 
 .expense-con .total-expense-con {
@@ -60,10 +59,6 @@
 
 .expense-con .main-content .right-content .history-item-con:hover {
   background: var(--background-color-3); /* Change background on hover */
-}
-
-.expense-con .main-content .right-content .history-item-con:hover {
-  background: var(--background-color-3);
 }
 
 .expense-con .main-content .right-content .history-item-con .category-icon {
