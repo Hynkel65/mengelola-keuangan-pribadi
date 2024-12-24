@@ -9,7 +9,7 @@ exports.createBudget = async (req, res) => {
         const budget = await Budget.create({
             category,
             amount,
-            user: req.user.id // Use the authenticated user's ID
+            user: req.user.id
         });
         return res.status(201).json({ success: true, data: budget });
     } catch (error) {

@@ -16,7 +16,6 @@ import BudgetTable from "../layout/BudgetTable";
 import { getMonthlyReport, getAnnualReport, getCategoryReport } from "../utils/FinancialReports";
 import "../style/Analysis.css";
 
-// Register Chart.js components
 ChartJS.register(
   BarElement,
   CategoryScale,
@@ -52,12 +51,10 @@ const Analysis = () => {
   const annualReportData = getAnnualReport(incomes, expenses, selectedYear);
   const annualReport = annualReportData.annualData;
 
-  // Calculate averages for annual report
   const averageIncome = Math.round(annualReport.reduce((sum, data) => sum + data.totalIncome, 0) / 12);
   const averageExpense = Math.round(annualReport.reduce((sum, data) => sum + data.totalExpense, 0) / 12);
   const averageBalance = Math.round(annualReport.reduce((sum, data) => sum + data.balance, 0) / 12);
 
-  // Data for Doughnut Chart (Monthly Category Breakdown)
   const doughnutChartData = {
     labels: Object.keys(categoryReport).map(category => {
       const categoryLabels = {
@@ -106,7 +103,7 @@ const Analysis = () => {
       tooltip: {
         enabled: true,
         callbacks: {
-          label: function(context) {
+          label: function (context) {
             return moneyFormatter(context.raw);
           }
         }
@@ -114,7 +111,6 @@ const Analysis = () => {
     },
   };
 
-  // Data for Bar Chart (Annual Report)
   const annualBarChartData = {
     labels: annualReport.map(data => {
       const months = [
@@ -145,13 +141,13 @@ const Analysis = () => {
     plugins: {
       legend: {
         labels: {
-          color: '#ffffff', // Light text
+          color: '#ffffff',
         },
       },
       tooltip: {
         enabled: true,
         callbacks: {
-          label: function(context) {
+          label: function (context) {
             return moneyFormatter(context.raw);
           }
         }
@@ -160,28 +156,27 @@ const Analysis = () => {
     scales: {
       x: {
         ticks: {
-          color: '#ffffff', // Light text
+          color: '#ffffff',
         },
         grid: {
-          color: '#555555', // Subtle grid lines
+          color: '#555555',
         },
       },
       y: {
         ticks: {
-          color: '#ffffff', // Light text
+          color: '#ffffff',
         },
         grid: {
-          color: '#555555', // Subtle grid lines
+          color: '#555555',
         },
       },
     },
   };
 
-  // Calculate budget vs actual spending for each category
   useEffect(() => {
     const data = budgets.map(budget => {
       const totalSpent = expenses
-        .filter(expense => 
+        .filter(expense =>
           expense.category === budget.category &&
           new Date(expense.date).getMonth() === selectedMonth
         )
@@ -195,7 +190,6 @@ const Analysis = () => {
     setCategoryData(data);
   }, [budgets, expenses, selectedMonth]);
 
-  // Data for Bar Chart (Budget vs Actual Spending)
   const chartData = {
     labels: categoryData.map(item => {
       const categoryLabels = {
@@ -233,19 +227,19 @@ const Analysis = () => {
       <div className="annual-report-con">
         <h2>Laporan Tahunan</h2>
         <div className="annual-select">
-            <label htmlFor="year">Pilih Tahun:</label>
-            <select
-              id="year"
-              value={selectedYear}
-              onChange={e => setSelectedYear(parseInt(e.target.value))}
-            >
-              {Array.from({ length: 5 }, (_, i) => (
-                <option key={i} value={currentYear - i}>
-                  {currentYear - i}
-                </option>
-              ))}
-            </select>
-          </div>
+          <label htmlFor="year">Pilih Tahun:</label>
+          <select
+            id="year"
+            value={selectedYear}
+            onChange={e => setSelectedYear(parseInt(e.target.value))}
+          >
+            {Array.from({ length: 5 }, (_, i) => (
+              <option key={i} value={currentYear - i}>
+                {currentYear - i}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="annual-report">
           <div className="annual-summary">
             <h2>Rata-rata</h2>
@@ -261,19 +255,19 @@ const Analysis = () => {
       <div className="monthly-report-con">
         <h2>Laporan Bulanan</h2>
         <div className="monthly-select">
-            <label htmlFor="month">Pilih Bulan:</label>
-            <select
-              id="month"
-              value={selectedMonth}
-              onChange={e => setSelectedMonth(parseInt(e.target.value))}
-            >
-              {Array.from({ length: 12 }, (_, i) => (
-                <option key={i} value={i}>
-                  {new Date(0, i).toLocaleString("default", { month: "long" })}
-                </option>
-              ))}
-            </select>
-          </div>
+          <label htmlFor="month">Pilih Bulan:</label>
+          <select
+            id="month"
+            value={selectedMonth}
+            onChange={e => setSelectedMonth(parseInt(e.target.value))}
+          >
+            {Array.from({ length: 12 }, (_, i) => (
+              <option key={i} value={i}>
+                {new Date(0, i).toLocaleString("default", { month: "long" })}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="monthly-report">
           <div className="monthly-summary">
             <h2>Total</h2>
@@ -288,11 +282,11 @@ const Analysis = () => {
       </div>
 
       {/* Anggaran */}
-        <div className="budget-con">
-          <h2>Anggaran</h2>
-          <BudgetTable className="budgetTable-con"/>
-          <Bar data={chartData} options={barChartOptions} className="budgetBar-con"/>
-        </div>
+      <div className="budget-con">
+        <h2>Anggaran</h2>
+        <BudgetTable className="budgetTable-con" />
+        <Bar data={chartData} options={barChartOptions} className="budgetBar-con" />
+      </div>
     </div>
   );
 };

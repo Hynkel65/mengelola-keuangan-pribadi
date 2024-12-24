@@ -6,9 +6,7 @@ import Signup from './components/auth/Signup';
 import './App.css';
 
 function App() {
-  // State to toggle between Signin and Signup components
   const [showLogin, setShowLogin] = useState(true);
-  // Accessing the authentication status from GlobalContext
   const { isAuthenticated } = useContext(GlobalContext);
 
   return (

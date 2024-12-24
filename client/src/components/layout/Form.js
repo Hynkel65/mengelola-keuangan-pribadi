@@ -12,21 +12,17 @@ const Form = ({
   formMode,
   selectedImage
 }) => {
-  // Reference for the file input to potentially manipulate it later
   const fileInputRef = useRef(null);
-
-  // Determine button text based on form mode
   const buttonText = formMode === "add" ? "Add" : "Update";
 
-  // Determine categories based on provided options or default to income/expense
   const categories = Array.isArray(categoryOptions)
     ? categoryOptions
     : categoryOptions === "income"
-    ? incomeOptions
-    : expenseOptions;
+      ? incomeOptions
+      : expenseOptions;
 
   return (
-    <form 
+    <form
       onSubmit={formMode === 'add' ? handleSubmit : handleUpdate}
       encType='multipart/form-data'
     >
@@ -42,7 +38,7 @@ const Form = ({
           required
         />
       </div>
-      
+
       <div>
         <input
           type="number"

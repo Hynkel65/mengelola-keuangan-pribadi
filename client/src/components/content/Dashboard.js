@@ -6,28 +6,24 @@ import '../style/Dashboard.css';
 import { GlobalContext } from '../context/GlobalState';
 
 const Dashboard = () => {
-  // Get incomes and expenses from global context
   const { incomes, expenses } = useContext(GlobalContext);
 
-  // Calculate total income
-  const totalIncome = useMemo(() => 
-    incomes.reduce((total, income) => total + income.amount, 0), 
+  const totalIncome = useMemo(() =>
+    incomes.reduce((total, income) => total + income.amount, 0),
     [incomes]
   );
 
-  // Calculate total expense
-  const totalExpense = useMemo(() => 
-    expenses.reduce((total, expense) => total + expense.amount, 0), 
+  const totalExpense = useMemo(() =>
+    expenses.reduce((total, expense) => total + expense.amount, 0),
     [expenses]
   );
 
   const currentDate = new Date();
 
-  // Calculate total income for the current month
   const totalIncomeThisMonth = incomes.reduce((total, income) => {
     const incomeDate = new Date(income.date);
     if (
-      incomeDate.getMonth() === currentDate.getMonth() && 
+      incomeDate.getMonth() === currentDate.getMonth() &&
       incomeDate.getFullYear() === currentDate.getFullYear()
     ) {
       return total + parseFloat(income.amount);
@@ -35,11 +31,10 @@ const Dashboard = () => {
     return total;
   }, 0);
 
-  // Calculate total expense for the current month
   const totalExpenseThisMonth = expenses.reduce((total, expense) => {
     const expenseDate = new Date(expense.date);
     if (
-      expenseDate.getMonth() === currentDate.getMonth() && 
+      expenseDate.getMonth() === currentDate.getMonth() &&
       expenseDate.getFullYear() === currentDate.getFullYear()
     ) {
       return total + parseFloat(expense.amount);

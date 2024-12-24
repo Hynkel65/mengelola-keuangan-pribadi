@@ -2,7 +2,6 @@ import React, { createContext, useReducer, useEffect } from 'react';
 import AppReducer from './AppReducer';
 import axios from 'axios';
 
-// Initial state for the context
 const initialState = {
   incomes: [],
   expenses: [],
@@ -12,7 +11,6 @@ const initialState = {
   user: JSON.parse(localStorage.getItem('user')) || null,
 };
 
-// Create a context
 export const GlobalContext = createContext(initialState);
 
 export const GlobalProvider = ({ children }) => {
@@ -201,21 +199,21 @@ export const GlobalProvider = ({ children }) => {
   const updateIncome = async (id, updatedIncomeData) => {
     try {
       const formData = new FormData();
-  
+
       // Append all key-value pairs to the FormData
       for (const key in updatedIncomeData) {
         formData.append(key, updatedIncomeData[key]);
       }
-  
+
       const response = await fetch(`/api/v1/incomes/${id}`, {
         method: 'PATCH',
         body: formData, // FormData includes content-type automatically
       });
-  
+
       if (!response.ok) {
         throw new Error(`Failed to update income: ${response.status} ${response.statusText}`);
       }
-  
+
       const updatedIncome = await response.json();
       dispatch({ type: 'UPDATE_INCOME', payload: updatedIncome.data });
       return updatedIncome;
@@ -224,27 +222,27 @@ export const GlobalProvider = ({ children }) => {
       throw error;
     }
   };
-  
+
 
   // Update an expense by ID
   const updateExpense = async (id, updatedExpenseData) => {
     try {
       const formData = new FormData();
-  
+
       // Append all key-value pairs to the FormData
       for (const key in updatedExpenseData) {
         formData.append(key, updatedExpenseData[key]);
       }
-  
+
       const response = await fetch(`/api/v1/expenses/${id}`, {
         method: 'PATCH',
         body: formData, // FormData includes content-type automatically
       });
-  
+
       if (!response.ok) {
         throw new Error(`Failed to update expense: ${response.status} ${response.statusText}`);
       }
-  
+
       const updatedExpense = await response.json();
       dispatch({ type: 'UPDATE_EXPENSE', payload: updatedExpense.data });
       return updatedExpense;
@@ -262,7 +260,6 @@ export const GlobalProvider = ({ children }) => {
     }
   }, [state.isAuthenticated]);
 
-  // Provide context values to children components
   return (
     <GlobalContext.Provider
       value={{

@@ -4,21 +4,18 @@ import { Line } from 'react-chartjs-2';
 import { GlobalContext } from '../context/GlobalState';
 import moneyFormatter from "../utils/MoneyFormatter";
 
-// Register necessary Chart.js components
 ChartJs.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
 
-// Function to group data by month
 function groupByMonth(data) {
   const groupedData = {};
   data.forEach(item => {
-    const month = item.date.substring(0, 7); // Extract YYYY-MM from date
+    const month = item.date.substring(0, 7);
     if (!groupedData[month]) {
       groupedData[month] = { income: 0, expense: 0 };
     }
-    groupedData[month].income += item.amount; // Aggregate income
+    groupedData[month].income += item.amount;
   });
-  
-  // Convert grouped data into an array of objects
+
   return Object.entries(groupedData).map(([month, { income }]) => ({
     month,
     income,
@@ -33,7 +30,6 @@ function Chart() {
     const groupedIncomes = groupByMonth(incomes);
     const groupedExpenses = groupByMonth(expenses);
 
-    // Merge income and expenses data by month
     const mergedData = groupedIncomes.map(({ month, income }) => ({
       month,
       income,
@@ -43,7 +39,6 @@ function Chart() {
     setChartData(mergedData);
   }, [incomes, expenses]);
 
-  // Prepare data for the chart
   const data = {
     labels: chartData.map(item => item.month),
     datasets: [
@@ -64,7 +59,6 @@ function Chart() {
     ],
   };
 
-  // Chart options
   const options = {
     plugins: {
       legend: {
@@ -75,7 +69,7 @@ function Chart() {
       tooltip: {
         enabled: true,
         callbacks: {
-          label: function(context) {
+          label: function (context) {
             return moneyFormatter(context.raw);
           }
         }

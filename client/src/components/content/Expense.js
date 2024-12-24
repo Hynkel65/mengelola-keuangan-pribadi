@@ -7,10 +7,8 @@ import '../style/Expense.css';
 import { GlobalContext } from '../context/GlobalState';
 
 const Expense = ({ selectedExpense, setSelectedExpense }) => {
-  // Global context for managing expenses
   const { expenses, addExpense, deleteExpense, updateExpense } = useContext(GlobalContext);
 
-  // State variables
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState(null);
   const [formMode, setFormMode] = useState("add");
@@ -25,13 +23,11 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
     image: null,
   });
 
-  // Handle image click to show in modal
   const handleImgClick = (image) => {
     setSelectedImage(image);
     setShowModal(true);
   };
 
-  // Effect hook to update form values when a selected expense changes
   useEffect(() => {
     if (selectedExpense) {
       setFormMode("update");
@@ -46,7 +42,6 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
     }
   }, [selectedExpense]);
 
-  // Handle form submission for adding a new expense
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formattedDate = new Date(formValues.date);
@@ -68,7 +63,6 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
     setSelectedImage(null);
   };
 
-  // Handle input changes in the form
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
     setFormValues({
@@ -77,7 +71,6 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
     });
   };
 
-  // Handle editing an existing expense
   const handleEditExpense = (expense) => {
     setFormMode("update");
     setSelectedExpense(expense);
@@ -91,7 +84,6 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
     });
   };
 
-  // Handle updating an existing expense
   const handleUpdateExpense = async (event) => {
     event.preventDefault();
     if (!selectedExpense) {
@@ -121,7 +113,6 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
     }
   };
 
-  // Function to reset form values
   const resetFormValues = () => {
     setFormValues({
       title: '',
@@ -133,26 +124,23 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
     });
   };
 
-  // Get recent expenses
   const recentExpenseData = expenses.slice(-4).reverse();
 
-  // Expense category options
-const expenseOptions = [
-  { value: 'basic_needs', label: 'Kebutuhan Pokok' },
-  { value: 'education', label: 'Pendidikan' },
-  { value: 'health', label: 'Kesehatan' },
-  { value: 'entertainment', label: 'Hiburan' },
-  { value: 'social', label: 'Sosial' },
-  { value: 'finance', label: 'Keuangan' },
-  { value: 'unexpected_expenses', label: 'Pengeluaran Tidak Terduga' },
-];
+  const expenseOptions = [
+    { value: 'basic_needs', label: 'Kebutuhan Pokok' },
+    { value: 'education', label: 'Pendidikan' },
+    { value: 'health', label: 'Kesehatan' },
+    { value: 'entertainment', label: 'Hiburan' },
+    { value: 'social', label: 'Sosial' },
+    { value: 'finance', label: 'Keuangan' },
+    { value: 'unexpected_expenses', label: 'Pengeluaran Tidak Terduga' },
+  ];
 
-  // Calculate the total expense for the current month
   const currentDate = new Date();
   const totalExpense = expenses.reduce((total, expense) => {
     const expenseDate = new Date(expense.date);
     if (expenseDate.getMonth() === currentDate.getMonth() &&
-        expenseDate.getFullYear() === currentDate.getFullYear()) {
+      expenseDate.getFullYear() === currentDate.getFullYear()) {
       return total + parseFloat(expense.amount);
     }
     return total;

@@ -1,8 +1,6 @@
-// Reducer function to manage application state based on action types
 const AppReducer = (state, action) => {
   switch (action.type) {
     case 'SIGN_IN_SUCCESS':
-      // Handle successful sign-in
       return {
         ...state,
         isAuthenticated: true,
@@ -11,7 +9,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'SIGN_UP_SUCCESS':
-      // Handle successful sign-up
       return {
         ...state,
         user: action.payload,
@@ -19,14 +16,12 @@ const AppReducer = (state, action) => {
       };
 
     case 'AUTH_ERROR':
-      // Handle authentication error
       return {
         ...state,
         error: action.payload
       };
 
     case 'SIGN_OUT':
-      // Handle sign-out and clear user data from local storage
       localStorage.removeItem('isAuthenticated');
       localStorage.removeItem('user');
       return {
@@ -38,7 +33,7 @@ const AppReducer = (state, action) => {
         budgets: [],
       };
 
-      case 'GET_BUDGETS':
+    case 'GET_BUDGETS':
       return {
         ...state,
         budgets: action.payload,
@@ -69,7 +64,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'GET_INCOMES':
-      // Handle fetching of incomes
       return {
         ...state,
         incomes: action.payload,
@@ -77,7 +71,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'GET_EXPENSES':
-      // Handle fetching of expenses
       return {
         ...state,
         expenses: action.payload,
@@ -85,7 +78,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'ADD_INCOME':
-      // Handle adding a new income
       return {
         ...state,
         incomes: [...state.incomes, action.payload],
@@ -93,7 +85,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'ADD_EXPENSE':
-      // Handle adding a new expense
       return {
         ...state,
         expenses: [...state.expenses, action.payload],
@@ -101,7 +92,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'DELETE_INCOME':
-      // Handle deletion of an income
       return {
         ...state,
         incomes: state.incomes.filter((income) => income._id !== action.payload),
@@ -109,7 +99,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'DELETE_EXPENSE':
-      // Handle deletion of an expense
       return {
         ...state,
         expenses: state.expenses.filter((expense) => expense._id !== action.payload),
@@ -117,7 +106,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'UPDATE_INCOME':
-      // Handle updating an income
       return {
         ...state,
         incomes: state.incomes.map((income) =>
@@ -127,7 +115,6 @@ const AppReducer = (state, action) => {
       };
 
     case 'UPDATE_EXPENSE':
-      // Handle updating an expense
       return {
         ...state,
         expenses: state.expenses.map((expense) =>
@@ -137,14 +124,12 @@ const AppReducer = (state, action) => {
       };
 
     case 'TRANSACTION_ERROR':
-      // Handle transaction error
       return {
         ...state,
         error: action.payload,
       };
 
     default:
-      // Return current state if action type is not recognized
       return state;
   }
 };

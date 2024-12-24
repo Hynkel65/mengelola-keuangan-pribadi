@@ -1,4 +1,3 @@
-// Fungsi untuk menghitung laporan bulanan
 export const getMonthlyReport = (incomes, expenses, month, year) => {
     const monthlyIncomes = incomes.filter(income => {
         const incomeDate = new Date(income.date);
@@ -21,7 +20,6 @@ export const getMonthlyReport = (incomes, expenses, month, year) => {
     };
 };
 
-// Fungsi untuk menghitung laporan tahunan
 export const getAnnualReport = (incomes, expenses, year) => {
     const annualData = Array.from({ length: 12 }, (_, index) => {
         const monthData = getMonthlyReport(incomes, expenses, index, year);
@@ -37,8 +35,6 @@ export const getAnnualReport = (incomes, expenses, year) => {
     };
 };
 
-
-// Fungsi untuk menghitung laporan kategori
 export const getCategoryReport = (expenses) => {
     const categoryData = {};
 

@@ -1,51 +1,48 @@
 const mongoose = require('mongoose');
 
-// Define the schema for the Income model
 const incomeSchema = new mongoose.Schema({
     title: {
         type: String,
-        trim: true, // Remove whitespace from both ends
-        required: true, // Field is required
-        maxLength: 20 // Maximum length of 20 characters
+        trim: true,
+        required: true,
+        maxLength: 20
     },
     amount: {
         type: Number,
-        required: true, // Field is required
-        maxLength: 20 // Maximum length of 20 characters
+        required: true,
     },
     type: {
         type: String,
-        default: "income" // Default value is "income"
+        default: "income"
     },
     date: {
         type: Date,
-        trim: true, // Remove whitespace from both ends
-        required: true // Field is required
+        trim: true,
+        required: true
     },
     category: {
         type: String,
-        trim: true, // Remove whitespace from both ends
-        required: true // Field is required
+        trim: true,
+        required: true
     },
     description: {
         type: String,
-        trim: true, // Remove whitespace from both ends
-        required: true, // Field is required
-        maxLength: 50 // Maximum length of 50 characters
+        trim: true,
+        required: true,
+        maxLength: 50
     },
     image: {
         type: String,
-        trim: true, // Remove whitespace from both ends
-        required: false // Field is optional
+        trim: true,
+        required: false
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the User model
-        required: true // Field is required
+        ref: 'User',
+        required: true
     }
 }, {
-    timestamps: true // Automatically add createdAt and updatedAt timestamps
+    timestamps: true
 });
 
-// Export the Income model
 module.exports = mongoose.model('Income', incomeSchema);

@@ -4,27 +4,22 @@ import { GlobalContext } from '../context/GlobalState';
 const Signup = () => {
   const { signup } = useContext(GlobalContext);
 
-  // State to store form data
   const [formData, setFormData] = useState({
     username: '',
     password: '',
     confirmPassword: ''
   });
 
-  // State to store error messages
   const [error, setError] = useState('');
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords tidak sama');
       return;
     }
 
-    // Attempt to sign up
     const success = await signup(formData);
     if (success) {
       alert('Sign up berhasil');

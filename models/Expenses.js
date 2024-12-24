@@ -1,54 +1,51 @@
 const mongoose = require('mongoose');
 
-// Define the schema for an Expense
 const expenseSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      trim: true, // Remove whitespace from both sides
-      required: true, // Title is required
-      maxLength: 20, // Maximum length of 20 characters
+      trim: true,
+      required: true,
+      maxLength: 20,
     },
     amount: {
       type: Number,
-      required: true, // Amount is required
-      maxLength: 20, // Note: maxLength is not applicable for Number type, consider using min/max
+      required: true,
     },
     type: {
       type: String,
-      default: "expense", // Default value is 'expense'
+      default: "expense",
     },
     date: {
       type: Date,
-      trim: true, // Remove whitespace from both sides
-      required: true, // Date is required
+      trim: true,
+      required: true,
     },
     category: {
       type: String,
-      trim: true, // Remove whitespace from both sides
-      required: true, // Category is required
+      trim: true,
+      required: true,
     },
     description: {
       type: String,
-      trim: true, // Remove whitespace from both sides
-      required: true, // Description is required
-      maxLength: 50, // Maximum length of 50 characters
+      trim: true,
+      required: true,
+      maxLength: 50,
     },
     image: {
       type: String,
-      trim: true, // Remove whitespace from both sides
-      required: false, // Image is optional
+      trim: true,
+      required: false,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Reference to User model
-      required: true, // User is required
+      ref: 'User',
+      required: true,
     },
   },
   {
-    timestamps: true, // Automatically add createdAt and updatedAt timestamps
+    timestamps: true,
   }
 );
 
-// Export the Expense model
 module.exports = mongoose.model('Expense', expenseSchema);

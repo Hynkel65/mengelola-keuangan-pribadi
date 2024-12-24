@@ -10,7 +10,6 @@ import Income from './content/Income';
 import Expense from './content/Expense';
 
 function Main() {
-  // State to track the active tab
   const [activeButton, setActiveButton] = useState('dashboard');
   const [isNavVisible, setIsNavVisible] = useState(window.innerWidth > 1024);
 
@@ -18,27 +17,23 @@ function Main() {
     const handleResize = () => {
       setIsNavVisible(window.innerWidth > 1024);
     };
-  
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Handler to update active tab based on button click
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
     setIsNavVisible(window.innerWidth > 1024);
   };
 
-  // Toggles the visibility of the navbar
   const toggleNavbar = () => {
     setIsNavVisible(!isNavVisible);
   };
 
-  // State to track selected income and expense
   const [selectedIncome, setSelectedIncome] = useState(null);
   const [selectedExpense, setSelectedExpense] = useState(null);
 
-  // Function to navigate to a specific tab
   const navigateTo = (tabName) => {
     setActiveButton(tabName);
   };

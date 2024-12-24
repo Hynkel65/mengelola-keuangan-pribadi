@@ -7,7 +7,6 @@ const BudgetTable = () => {
     const [editMode, setEditMode] = useState(null);
     const [budgetAmount, setBudgetAmount] = useState('');
 
-    // Expense categories from Expense.js
     const expenseCategories = [
         { value: 'basic_needs', label: 'Kebutuhan Pokok' },
         { value: 'education', label: 'Pendidikan' },
@@ -35,7 +34,7 @@ const BudgetTable = () => {
         try {
             await updateBudget(budgetId, {
                 amount: parseFloat(amount),
-                category: category, // Include category in the update
+                category: category,
             });
             setEditMode(null);
             alert('Data anggaran berhasil diperbarui.');

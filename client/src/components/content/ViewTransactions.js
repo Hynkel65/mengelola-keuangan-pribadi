@@ -6,16 +6,13 @@ import ImageModal from "../utils/ImageModal";
 import DeleteConfirmationModal from '../utils/DeleteConfirmationModal';
 
 const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) => {
-  // Fetching incomes, expenses, and deletion functions from Global Context
   const { incomes, expenses, deleteIncome, deleteExpense } = useContext(GlobalContext);
 
-  // Combine incomes and expenses into a single transactions array with type indication
   const transactions = [...incomes, ...expenses].map((txn) => ({
     ...txn,
     type: incomes.includes(txn) ? "Income" : "Expense",
   }));
 
-  // State declarations
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
@@ -27,7 +24,6 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Sorting transactions based on sortConfig
   const sortedTransactions = [...transactions].sort((a, b) => {
     if (!sortConfig.key) {
       return new Date(b.date) - new Date(a.date);
@@ -39,7 +35,6 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
     return a[sortConfig.key] > b[sortConfig.key] ? order : -order;
   });
 
-  // Filtering transactions based on searchTerm, filterCategory, and filterType
   const filteredTransactions = sortedTransactions.filter((txn) => {
     const matchesSearch = searchTerm === "" || Object.values(txn).join(" ").toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = filterCategory === "" || txn.category === filterCategory;
@@ -53,7 +48,6 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
     currentPage * itemsPerPage
   );
 
-  // Handle sorting logic
   const handleSort = (key) => {
     setSortConfig((prev) => {
       const direction = prev.key === key && prev.direction === "ascending" ? "descending" : "ascending";
@@ -61,13 +55,11 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
     });
   };
 
-  // Handle image click to show modal
   const handleImgClick = (imgSrc) => {
     setSelectedImage(imgSrc);
     setShowModal(true);
   };
 
-  // Handle transaction edit
   const handleEditTransaction = (transaction) => {
     if (transaction.type === 'Income') {
       setSelectedIncome(transaction);
@@ -78,7 +70,6 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
     }
   };
 
-  // Pagination controls
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
@@ -92,7 +83,7 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
   };
 
   const categories = [
-    { value: '', label: 'Semua Kategori'},
+    { value: '', label: 'Semua Kategori' },
     { value: '', label: 'PEMASUKAN', disabled: true },
     { value: 'active_income', label: 'Pemasukan Aktif' },
     { value: 'passive_income', label: 'Pemasukan Pasif' },
@@ -120,8 +111,8 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
           onChange={(e) => setFilterCategory(e.target.value)}
         >
           {categories.map((category) => (
-            <option 
-              key={category.value || category.label} 
+            <option
+              key={category.value || category.label}
               value={category.value}
               disabled={category.disabled}
             >
@@ -148,27 +139,27 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
           <tr>
             <th>Gambar</th>
             <th onClick={() => handleSort("title")}>
-              Judul {sortConfig.key === 'title' && 
+              Judul {sortConfig.key === 'title' &&
                 (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
             </th>
             <th onClick={() => handleSort("description")}>
-              Deskripsi {sortConfig.key === 'description' && 
+              Deskripsi {sortConfig.key === 'description' &&
                 (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
             </th>
             <th onClick={() => handleSort("category")}>
-              Kategori {sortConfig.key === 'category' && 
+              Kategori {sortConfig.key === 'category' &&
                 (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
             </th>
             <th onClick={() => handleSort("amount")}>
-              Jumlah {sortConfig.key === 'amount' && 
+              Jumlah {sortConfig.key === 'amount' &&
                 (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
             </th>
             <th onClick={() => handleSort("date")}>
-              Tanggal {sortConfig.key === 'date' && 
+              Tanggal {sortConfig.key === 'date' &&
                 (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
             </th>
             <th onClick={() => handleSort("type")}>
-              Tipe {sortConfig.key === 'type' && 
+              Tipe {sortConfig.key === 'type' &&
                 (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
             </th>
             <th>Aksi</th>

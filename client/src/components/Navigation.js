@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
 
-// Navigation component to handle button clicks and active states
 const Navigation = ({ activeButton, handleButtonClick }) => {
   const [pressedButton, setPressedButton] = useState('');
 
-  // Handles button click events
   const handleClick = (buttonName) => {
-    handleButtonClick(buttonName); // Call parent handler
-    setPressedButton(buttonName);  // Set the pressed button state
+    handleButtonClick(buttonName);
+    setPressedButton(buttonName);
   };
 
-  // Resets the pressed button state on mouse release
   const handleButtonRelease = () => {
     setPressedButton('');
   };
 
-  // Render method for Navigation component
   return (
     <div className="navigation">
       {[
@@ -27,9 +23,8 @@ const Navigation = ({ activeButton, handleButtonClick }) => {
       ].map(({ name, label }) => (
         <div key={name} className="choose-nav">
           <div
-            className={`overlap-group ${name} ${
-              activeButton === name ? 'active' : ''
-            } ${pressedButton === name ? 'pressed' : ''}`}
+            className={`overlap-group ${name} ${activeButton === name ? 'active' : ''
+              } ${pressedButton === name ? 'pressed' : ''}`}
             onClick={() => handleClick(name)}
             onMouseUp={handleButtonRelease}
           >

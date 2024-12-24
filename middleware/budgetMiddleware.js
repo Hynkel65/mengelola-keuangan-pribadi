@@ -1,6 +1,5 @@
 const { body, validationResult } = require('express-validator');
 
-// Middleware to validate budget data
 const validateBudget = [
     body('category')
         .notEmpty()
@@ -12,7 +11,6 @@ const validateBudget = [
         .withMessage('Amount is required'),
 ];
 
-// Middleware to handle validation errors
 const handleValidationErrors = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

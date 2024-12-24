@@ -8,15 +8,12 @@ import { GlobalContext } from '../context/GlobalState';
 
 const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
   const { incomes, addIncome, deleteIncome, updateIncome } = useContext(GlobalContext);
-
-  // State variables for managing UI state
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [incomeToDelete, setIncomeToDelete] = useState(null);
   const [formMode, setFormMode] = useState("add");
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // State for form inputs
   const [formValues, setFormValues] = useState({
     title: '',
     amount: '',
@@ -26,7 +23,6 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
     image: null
   });
 
-  // Effect to populate form when editing an income
   useEffect(() => {
     if (selectedIncome) {
       setFormMode("update");
@@ -41,13 +37,11 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
     }
   }, [selectedIncome]);
 
-  // Handle image click to open modal
   const handleImgClick = (image) => {
     setSelectedImage(image);
     setShowModal(true);
   };
 
-  // Handle form submission for adding income
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formattedDate = new Date(formValues.date);
@@ -63,7 +57,6 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
 
       await addIncome(formData);
 
-      // Reset form values after submission
       setFormValues({
         title: '',
         amount: '',
@@ -79,7 +72,6 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
     setSelectedImage(null);
   };
 
-  // Handle changes in form inputs
   const handleInputChange = (event) => {
     const { name, value, type, files } = event.target;
     if (type === 'file') {
@@ -95,7 +87,6 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
     }
   };
 
-  // Prepare form for editing income
   const handleEditIncome = (income) => {
     setFormMode("update");
     setSelectedIncome(income);
@@ -109,7 +100,6 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
     });
   };
 
-  // Handle form submission for updating income
   const handleUpdateIncome = async (event) => {
     event.preventDefault();
     if (!selectedIncome) {
@@ -132,7 +122,6 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
 
       await updateIncome(selectedIncome._id, updatedFormData);
 
-      // Reset form values after update
       setFormValues({
         title: '',
         amount: '',
@@ -151,22 +140,19 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
     }
   };
 
-  // Get recent incomes
   const recentIncomeData = incomes.slice(-4).reverse();
 
-// Options for income categories
-const incomeOptions = [
-  { value: 'active_income', label: 'Pemasukan Aktif' },
-  { value: 'passive_income', label: 'Pemasukan Pasif' },
-  { value: 'other_income', label: 'Pemasukan Lainya' },
-];
+  const incomeOptions = [
+    { value: 'active_income', label: 'Pemasukan Aktif' },
+    { value: 'passive_income', label: 'Pemasukan Pasif' },
+    { value: 'other_income', label: 'Pemasukan Lainya' },
+  ];
 
-  // Calculate total income for the current month
   const currentDate = new Date();
   const totalIncome = incomes.reduce((total, income) => {
     const incomeDate = new Date(income.date);
     if (incomeDate.getMonth() === currentDate.getMonth() &&
-        incomeDate.getFullYear() === currentDate.getFullYear()) {
+      incomeDate.getFullYear() === currentDate.getFullYear()) {
       return total + parseFloat(income.amount);
     }
     return total;
@@ -180,11 +166,11 @@ const incomeOptions = [
       </div>
       <div className="main-content">
         <div className="left-content">
-          <Form 
+          <Form
             handleSubmit={handleSubmit}
             handleInputChange={handleInputChange}
             handleUpdate={handleUpdateIncome}
-            formData={formValues} 
+            formData={formValues}
             categoryOptions={incomeOptions}
             categoryType="income"
             formMode={formMode}
@@ -198,7 +184,7 @@ const incomeOptions = [
               <div className="history-item-details">
                 <div className="img-con" onClick={() => handleImgClick(income.image)}>
                   {income.image && (
-                    <img src={`/uploads/${income.image}`} alt="Income"/>
+                    <img src={`/uploads/${income.image}`} alt="Income" />
                   )}
                 </div>
                 <div className="info">
