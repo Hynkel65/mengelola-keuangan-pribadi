@@ -25,7 +25,21 @@ connectDB();
 
 app.use(cookieParser());
 app.use(express.json());
-app.use(helmet());
+
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'"/*, "'unsafe-inline'"*/], // Add 'unsafe-inline' temporarily for testing. REMOVE IN PRODUCTION
+            styleSrc: ["'self'", "https://fonts.googleapis.com"],
+            imgSrc: ["'self'", "data:"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            connectSrc: ["'self'"],
+        },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: { policy: "same-origin" },
+}));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
