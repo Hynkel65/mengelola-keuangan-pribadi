@@ -43,10 +43,21 @@ app.use(helmet({
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(cors({
+const corsOptions = {
     credentials: true,
-    origin: 'http://localhost:3000',
-}));
+    origin: (origin, callback) => {
+        if (!origin || process.env.NODE_ENV === 'development' || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+            callback(null, true);
+        } else if (process.env.NODE_ENV === 'production' && origin === 'https://your-production-domain.com') {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+};
+
+app.use(cors(corsOptions));
 
 app.set('trust proxy', 1);
 
