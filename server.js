@@ -46,15 +46,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const corsOptions = {
     credentials: true,
     origin: (origin, callback) => {
-        if (!origin || process.env.NODE_ENV === 'development' || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+        const whitelist = [
+            'http://localhost:3000',
+            'http://127.0.0.1:3000',
+            'https://185.97.144.127:3000',
+        ];
+        if (!origin || whitelist.includes(origin) || process.env.NODE_ENV === 'development') {
             callback(null, true);
-        } else if (process.env.NODE_ENV === 'production' && origin === 'https://your-production-domain.com') {
-            callback(null, true);
-        }
-        else {
+        } else {
             callback(new Error('Not allowed by CORS'));
         }
-    },
+    }
+    
 };
 
 app.use(cors(corsOptions));
@@ -65,7 +68,8 @@ const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
 });
-app.use(limiter);
+
+app.use('/api', limiter);
 
 app.use('/api/v1/incomes', requireAuth, incomeRoutes);
 app.use('/api/v1/expenses', requireAuth, expenseRoutes);
