@@ -47,9 +47,9 @@ const corsOptions = {
     credentials: true,
     origin: (origin, callback) => {
         const whitelist = [
-            'http://localhost:3000',
-            'http://127.0.0.1:3000',
-            'https://185.97.144.127:3000',
+            'http://localhost:5000',
+            'http://127.0.0.1:5000',
+            'https://185.97.144.127:5000',
         ];
         if (!origin || whitelist.includes(origin) || process.env.NODE_ENV === 'development') {
             callback(null, true);
@@ -82,7 +82,14 @@ if (process.env.NODE_ENV === 'development') {
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
-    app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')));
+
+    // Log when serving static files
+    console.log('Serving static files from client/build');
+
+    app.get('*', (req, res) => {
+        console.log(`Received request for ${req.path}`);
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
 }
 
 const PORT = process.env.PORT || 5000;
