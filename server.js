@@ -30,16 +30,16 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'"/*, "'unsafe-inline'"*/], // Add 'unsafe-inline' temporarily for testing. REMOVE IN PRODUCTION
+            scriptSrc: ["'self'"],
             styleSrc: ["'self'", "https://fonts.googleapis.com"],
             imgSrc: ["'self'", "data:"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
-            connectSrc: ["'self'"],
+            connectSrc: ["'self'", "https://mengelola-keuangan-pribadi.xyz"],
         },
     },
-    crossOriginEmbedderPolicy: false,
-    crossOriginOpenerPolicy: { policy: "same-origin" },
+    crossOriginEmbedderPolicy: true,
 }));
+
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -49,7 +49,7 @@ const corsOptions = {
         const whitelist = [
             'http://localhost:5000',
             'http://127.0.0.1:5000',
-            'https://185.97.144.127:5000',
+            'https://mengelola-keuangan-pribadi.xyz',
         ];
         if (!origin || whitelist.includes(origin) || process.env.NODE_ENV === 'development') {
             callback(null, true);
@@ -81,16 +81,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('client/build'));
-
-    // Log when serving static files
-    console.log('Serving static files from client/build');
-
-    app.get('*', (req, res) => {
-        console.log(`Received request for ${req.path}`);
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    });
+    app.use(express.static(path.join(__dirname, 'client', 'build')));
+    app.get('*', (req, res) =>
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+    );
 }
+
 
 const PORT = process.env.PORT || 5000;
 
