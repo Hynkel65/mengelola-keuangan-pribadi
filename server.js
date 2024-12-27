@@ -49,6 +49,7 @@ const corsOptions = {
         const whitelist = [
             'http://localhost:5000',
             'http://127.0.0.1:5000',
+            'https://http://185.97.144.127:5000',
             'https://mengelola-keuangan-pribadi.xyz',
         ];
         if (!origin || whitelist.includes(origin) || process.env.NODE_ENV === 'development') {
