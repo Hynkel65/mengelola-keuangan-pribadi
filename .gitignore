@@ -141,5 +141,5 @@ dist
 .idea/
 
 # Production build output
-/dist/
-/build/
+/client/dist/
+/client/build/
