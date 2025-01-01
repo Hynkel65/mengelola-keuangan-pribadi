@@ -102,11 +102,15 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
       <div className="filter-container">
         <input
           type="text"
+          id="find"
+          name="find"
           placeholder="Cari..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select
+          id="category"
+          name="category"
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
         >
@@ -121,6 +125,8 @@ const ViewTransaction = ({ setSelectedIncome, setSelectedExpense, navigateTo }) 
           ))}
         </select>
         <select
+          id="type"
+          name="type"
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
         >

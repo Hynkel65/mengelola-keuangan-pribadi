@@ -11,7 +11,7 @@ body {
   background-color: var(--background-color-1);
   font-family: var(--font-family);
   color: var(--white);
-  line-height: 1.6; /* Improved readability */
+  line-height: 1.6;
 }
 
 h1 {
@@ -81,7 +81,7 @@ background-color: var(--edit-btn-hover-color);
   border-radius: var(--border-radius); /* Ensure border-radius is consistent */
 }
 
-@media (max-width: 1024px) { /* Adjust the breakpoint as needed */
+@media (max-width: 768px) { /* Adjust the breakpoint as needed */
   .container {
     flex-direction: column; /* Change to column on smaller screens */
     position: relative;
@@ -94,8 +94,8 @@ background-color: var(--edit-btn-hover-color);
     top: 0;
     margin-right: 0;
     margin-left: 0;
-    z-index: 999; /* Add this */
-    width: 90%; /* Add this */
+    z-index: 999;
+    width: 100%;
     background-color: var(--background-color-2);
   }
 

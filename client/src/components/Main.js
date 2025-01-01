@@ -11,11 +11,11 @@ import Expense from './content/Expense';
 
 function Main() {
   const [activeButton, setActiveButton] = useState('dashboard');
-  const [isNavVisible, setIsNavVisible] = useState(window.innerWidth > 1024);
+  const [isNavVisible, setIsNavVisible] = useState(window.innerWidth > 768);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsNavVisible(window.innerWidth > 1024);
+      setIsNavVisible(window.innerWidth > 768);
     };
 
     window.addEventListener('resize', handleResize);
@@ -24,7 +24,7 @@ function Main() {
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
-    setIsNavVisible(window.innerWidth > 1024);
+    setIsNavVisible(window.innerWidth > 768);
   };
 
   const toggleNavbar = () => {
@@ -41,7 +41,7 @@ function Main() {
   return (
     <div className="container">
       <button className="toggle-button" onClick={toggleNavbar}>
-        {isNavVisible ? 'Sembunyikan' : 'Tampilkan'} Menu
+        ☰
       </button>
       <div className={`left-con ${isNavVisible ? '' : 'collapsed'}`}>
         <Header />

@@ -1,4 +1,4 @@
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .transactions-table th:nth-child(3),
   .transactions-table td:nth-child(3) {
     display: none;
