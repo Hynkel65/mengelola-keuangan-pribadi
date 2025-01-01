@@ -41,7 +41,7 @@ exports.signupUser = async (req, res, next) => {
     try {
         const existingUser = await User.findOne({ username });
         if (existingUser) {
-            return res.status(400).json({ success: false, message: 'Username is already taken' });
+            return res.status(400).json({ success: false, message: 'Username sudah digunakan' });
         }
         const user = await User.create({ username, password });
         sendTokenResponse(user, 201, res);
@@ -56,11 +56,11 @@ exports.signinUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ username }).select('+password');
         if (!user) {
-            return res.status(401).json({ success: false, message: 'Username or password not found!' });
+            return res.status(401).json({ success: false, message: 'Username tidak ditemukan!' });
         }
         const isMatch = await user.matchPassword(password);
         if (!isMatch) {
-            return res.status(401).json({ success: false, message: 'Username or password not found!' });
+            return res.status(401).json({ success: false, message: 'Password Salah!' });
         }
         sendTokenResponse(user, 200, res);
     } catch (err) {

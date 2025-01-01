@@ -42,6 +42,10 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+  const clearError = () => {
+    dispatch({ type: 'AUTH_ERROR', payload: null });
+  };
+
   // Sign out the current user
   const signout = async () => {
     try {
@@ -284,6 +288,7 @@ export const GlobalProvider = ({ children }) => {
         deleteExpense,
         updateIncome,
         updateExpense,
+        clearError,
       }}
     >
       {children}

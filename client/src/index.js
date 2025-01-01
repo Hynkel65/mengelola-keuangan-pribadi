@@ -11,10 +11,10 @@ axios.defaults.withCredentials = true;
 
 function App() {
   const [showLogin, setShowLogin] = useState(true);
-  const { isAuthenticated } = useContext(GlobalContext);
+  const { isAuthenticated, clearError } = useContext(GlobalContext);
 
   return (
-    <GlobalProvider>
+    <>
       {!isAuthenticated ? (
         <div className="auth-container">
           {showLogin ? (
@@ -23,7 +23,10 @@ function App() {
               <p>
                 Tidak punya akun?{' '}
                 <span
-                  onClick={() => setShowLogin(false)}
+                  onClick={() => {
+                    setShowLogin(false);
+                    clearError();
+                  }}
                   style={{ color: '#00a2ff', cursor: 'pointer' }}
                 >
                   Sign up
@@ -36,7 +39,10 @@ function App() {
               <p>
                 Sudah punya akun?{' '}
                 <span
-                  onClick={() => setShowLogin(true)}
+                  onClick={() => {
+                    setShowLogin(true)
+                    clearError();
+                  }}
                   style={{ color: '#00a2ff', cursor: 'pointer' }}
                 >
                   Sign in
@@ -48,10 +54,14 @@ function App() {
       ) : (
         <Main />
       )}
-    </GlobalProvider>
+    </>
   );
 }
 
 const container = document.getElementById('root');
 const root = createRoot(container);
-root.render(<App />);
+root.render(
+  <GlobalProvider>
+    <App />
+  </GlobalProvider>
+);
