@@ -1,3 +1,6 @@
+@import "./theme.css";
+
+/* expense Container */
 .expense-con {
   padding: 20px;
   flex: 1;
@@ -5,82 +8,69 @@
   color: var(--white);
   border-radius: var(--border-radius);
   height: 100%;
+  overflow-y: auto; /* Added for scroll if content overflows */
 }
 
 .expense-con .total-expense-con {
   background-color: var(--background-color-3);
-  margin: 10px;
+  margin: 10px 0 40px 0;
   padding: 20px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
 }
 
+.expense-con .total-expense-text {
+  color: var(--expense-color); /* Apply expense color to the total */
+}
+
+/* Main Content Area */
 .expense-con .main-content {
   display: flex;
-  flex-direction: row; /* Default to row */
-  max-height: 90vh;
+  flex-direction: row;
+  gap: 20px; /* Use gap for spacing */
+  flex: 1; /* Allow content to take available space */
 }
 
-@media (max-width: 768px) { /* Adjust the breakpoint as needed */
-  .expense-con .main-content {
-    flex-direction: column; /* Change to column on smaller screens */
-  }
-}
-
+/* Left Content (Form) */
 .expense-con .main-content .left-content {
   flex: 1;
-  margin: 10px;
   display: flex;
   flex-direction: column;
 }
 
+/* Right Content (History) */
 .expense-con .main-content .right-content {
   flex: 2;
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
   background-color: var(--background-color-3);
   color: var(--white);
   border-radius: var(--border-radius);
-  text-align: center;
   box-shadow: var(--box-shadow);
+  padding: 20px; /* Add padding for better spacing */
+  overflow-y: auto; /* Add vertical scroll if needed */
 }
 
+.expense-con .main-content .right-content h3 {
+  margin-bottom: 20px;
+  text-align: center; /* Center the heading */
+}
+
+/* History Item Container */
 .expense-con .main-content .right-content .history-item-con {
   background: var(--background-color-2);
   box-shadow: var(--box-shadow);
-  padding: 10px;
+  padding: 15px; /* Adjust padding */
   border-radius: var(--border-radius);
   display: flex;
   align-items: center;
-  margin: 10px;
-  transition: background 0.2s; /* Added transition for hover effect */
+  margin-bottom: 10px; /* Consistent margin */
+  transition: background 0.2s;
 }
 
 .expense-con .main-content .right-content .history-item-con:hover {
-  background: var(--background-color-3); /* Change background on hover */
+  background: var(--background-color-4); /* Slightly darker on hover */
 }
 
-.expense-con .main-content .right-content .history-item-con .category-icon {
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  margin-right: 20px;
-}
-
-.expense-con .main-content .right-content .history-item-con .history-item-details {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.expense-con .main-content .right-content .history-item-con .history-item-details .info {
-  flex: 10;
-  text-align: justify;
-  padding: 1rem;
-}
-
+/* Image Container */
 .expense-con .main-content .right-content .history-item-con .img-con {
   width: 50px;
   height: 50px;
@@ -91,30 +81,106 @@
   justify-content: center;
   align-items: center;
   margin-right: 20px;
+  flex-shrink: 0; /* Prevent image from shrinking */
+}
+
+.expense-con .main-content .right-content .history-item-con img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover; /* Ensure image fits within container */
+}
+
+/* History Item Details */
+.expense-con
+  .main-content
+  .right-content
+  .history-item-con
+  .history-item-details {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+}
+
+.expense-con .main-content .right-content .history-item-con .info {
+  flex: 1;
+  text-align: left;
+  margin-bottom: 5px;
 }
 
 .expense-con .main-content .right-content .history-item-con .history-title {
-  font-size: 18px;
   font-weight: bold;
   color: var(--white);
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
-.expense-con .main-content .right-content .history-item-con .edit {
-  flex: 1;
-}
-
-.expense-con .main-content .right-content .history-item-con .delete {
-  flex: 1;
-}
-
-.expense-con .main-content .right-content .history-item-con .history-item-details .history-info {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  font-size: 14px;
-  text-align: left;
+.expense-con .main-content .right-content .history-item-con .history-info {
+  display: flex;
+  justify-content: space-around;
+  font-size: var(--font-size-4);
+  color: #ccc;
 }
 
 .expense-con .amount {
-  color: var(--expense-color)
+  color: var(--expense-color);
+  font-weight: 500; /* Make amount slightly bolder */
+}
+
+.expense-con .edit,
+.expense-con .delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.expense-con .edit-btn,
+.expense-con .delete-btn {
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+}
+
+.expense-con .edit-btn {
+  background-color: var(--edit-btn-color);
+  color: var(--white);
+}
+
+.expense-con .delete-btn {
+  background-color: var(--delete-btn-color);
+  color: var(--white);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .expense-con .main-content {
+    flex-direction: column;
+  }
+
+  .expense-con .main-content .right-content {
+    padding: 10px; /* Reduce padding on smaller screens */
+  }
+
+  .expense-con .main-content .right-content .history-item-con {
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align items to the left */
+    padding: 10px;
+  }
+  .expense-con .main-content .right-content .history-item-con .img-con {
+    margin: 0 auto 10px;
+  }
+  .expense-con
+    .main-content
+    .right-content
+    .history-item-con
+    .history-item-details {
+    width: 100%;
+  }
+  .expense-con .main-content .right-content .history-item-con .history-info {
+    flex-direction: column; /* Stack amount and date */
+  }
+  .expense-con .edit,
+  .expense-con .delete {
+    margin: 5px auto;
+  }
 }

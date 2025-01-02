@@ -90,7 +90,7 @@ const BudgetTable = () => {
                                                     }}>
                                                         Edit
                                                     </button>
-                                                <button onClick={() => {
+                                                <button className='delete-btn' onClick={() => {
                                                     setBudgetToDelete(existingBudget);
                                                     setShowDeleteConfirmation(true);
                                                 }}>

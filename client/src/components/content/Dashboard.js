@@ -61,9 +61,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="right-content">
-          <div className="history-con">
-            <History />
-          </div>
+          <History />
         </div>
       </div>
     </div>

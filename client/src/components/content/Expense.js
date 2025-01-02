@@ -186,7 +186,6 @@ const Expense = ({ selectedExpense, setSelectedExpense }) => {
                         year: 'numeric',
                       })}
                     </span>
-                    <span className="category">{expenseOptions.find(option => option.value === expense.category).label}</span>
                   </div>
                 </div>
                 <div className="edit">

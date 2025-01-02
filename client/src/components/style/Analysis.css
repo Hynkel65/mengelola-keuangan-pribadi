@@ -45,7 +45,7 @@
   align-items: center;
   margin-bottom: 40px;
   gap: 20px;
-  padding: 10px; /* Added padding for better spacing */
+  padding: 10px;
 }
 
 .monthly-summary,
@@ -91,6 +91,10 @@
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   margin: 10px; /* Added margin for spacing */
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .monthly-select,
@@ -106,27 +110,17 @@
   margin: 10px; /* Added margin for spacing */
 }
 
-@media (max-width: 768px) {
-  .monthly-report,
-  .annual-report {
-    flex-direction: column;
-  }
-
-  .monthly-summary,
-  .monthly-chart,
-  .annual-summary,
-  .annual-bar-chart {
-    flex: unset;
-    width: 100%;
-  }
-}
-
 .budget-table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
   background-color: var(--background-color-2);
   border-radius: var(--border-radius);
+
+  @media (max-width: 375px) {
+    overflow-x: auto;
+    display: block;
+  }
 }
 
 .budget-table th,
@@ -152,4 +146,18 @@
 
 .budget-table button:hover {
   background-color: var(--edit-btn-hover-color); /* Change to hover color */
+}
+
+@media (max-width: 768px) {
+  .monthly-summary,
+  .monthly-chart,
+  .annual-summary,
+  .annual-bar-chart {
+    flex: unset;
+    width: 100%;
+  }
+
+  .monthly-report {
+    justify-content: center;
+  }
 }

@@ -1,5 +1,6 @@
-@import './theme.css';
+@import "./theme.css";
 
+/* Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -8,201 +9,196 @@
 }
 
 body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   background-color: var(--background-color-1);
-  font-family: var(--font-family);
   color: var(--white);
-  line-height: 1.6;
+  font-family: var(--font-family);
 }
 
-h1 {
-  font-size: var(--font-size-1);
-  color: var(--primary-color);
-}
-
-h2 {
-  font-size: var(--font-size-2);
-  color: var(--primary-color);
-}
-
-h3 {
-  font-size: var(--font-size-3);
-}
-
+/* Typography */
 h1,
 h2,
 h3 {
   text-align: center;
   text-transform: uppercase;
   font-weight: bold;
-  margin: 0 0 10px 0;
+  margin-bottom: 1rem;
+  color: var(--primary-color); /* Consistent color */
 }
 
+h1 {
+  font-size: var(--font-size-1);
+}
+h2 {
+  font-size: var(--font-size-2);
+}
+h3 {
+  font-size: var(--font-size-3);
+}
 p {
   font-size: var(--font-size-4);
 }
 
+/* Buttons */
 button {
-  padding: 10px 15px; /* Standardized padding for consistency */
+  padding: 0.75rem 1rem;
   background-color: var(--edit-btn-color);
   border: none;
   color: var(--white);
   font-size: var(--font-size-4);
   cursor: pointer;
-  border-radius: var(--border-radius); /* Use theme variable */
+  border-radius: var(--border-radius);
   transition: background-color 0.2s ease;
 }
 
 button:hover {
-background-color: var(--edit-btn-hover-color);
+  background-color: var(--edit-btn-hover-color);
 }
 
 .delete-btn {
-  background-color: var(--delete-btn-color) !important;
+  background-color: var(--delete-btn-color); /* No !important needed */
 }
 
-.delete-btn:hover{
-  background-color: var(--delete-btn-hover-color) !important;
+.delete-btn:hover {
+  background-color: var(--delete-btn-hover-color); /* No !important needed */
 }
 
-.toggle-button {
-  display: none;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  z-index: 1000; /* Ensure it is above other elements */
-}
-
+/* Layout */
 .container {
   display: flex;
-  flex-direction: row; /* Default to row */
-  justify-content: center;
-  margin: 20px; /* Standardized margin */
   height: 90vh;
-  border-radius: var(--border-radius); /* Ensure border-radius is consistent */
+  width: 90vw;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow); /* Added box-shadow to container */
+  background-color: var(
+    --background-color-4
+  ); /* Added background color to container */
 }
 
-@media (max-width: 768px) { /* Adjust the breakpoint as needed */
+.left-con {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: var(--background-color-2);
+  padding: 20px;
+  margin: 10px;
+  border-radius: var(--border-radius);
+}
+
+.right-con {
+  display: flex;
+  flex-direction: column;
+  flex: 5;
+  width: 100vw;
+  background-color: var(--background-color-2);
+  margin: 10px;
+  border-radius: var(--border-radius);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Header */
+.header {
+  margin-bottom: 20px; /* Consistent spacing */
+  text-align: center;
+}
+
+.header-title {
+  font-size: var(--font-size-3);
+}
+
+.user {
+  color: var(--primary-color);
+}
+
+/* Navigation */
+.navigation {
+  display: flex;
+  flex-direction: column;
+}
+
+.choose-nav {
+  background-color: var(--background-color-3); /* Slightly darker default */
+  padding: 10px;
+  border-radius: var(--border-radius);
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smoother transition */
+  text-transform: uppercase; /* Move to .text-wrapper */
+}
+
+.choose-nav:hover {
+  background-color: var(--background-color-4); /* Darker on hover */
+}
+
+.active .text-wrapper {
+  /* More specific selector */
+  color: var(--primary-color);
+}
+
+.text-wrapper {
+  text-align: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+/* Toggle Button */
+.toggle-button {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  background-color: rgba(0, 126, 255, 0.1);
+  border: none;
+  font-size: 1rem;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
   .container {
-    flex-direction: column; /* Change to column on smaller screens */
-    position: relative;
-    align-items: center;
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    border-radius: 0;
+    overflow: auto;
   }
 
   .left-con {
-    position: absolute; /* Add this */
-    padding: 0;
+    margin: 0;
+    position: fixed;
     top: 0;
-    margin-right: 0;
-    margin-left: 0;
-    z-index: 999;
-    width: 100%;
-    background-color: var(--background-color-2);
+    left: 0;
+    width: 40%;
+    height: 100%;
+    z-index: 1001;
+    border-radius: 0;
+    background-color: var(--background-color-3);
+    transition: transform 0.3s ease-in-out;
+  }
+  .left-con.collapsed {
+    transform: translateX(-110%);
+  }
+  .left-con.visible {
+    transform: translateX(0);
   }
 
   .right-con {
-    margin-top: 0; /* Add this */
-    min-width: 90%;
+    margin: 0;
+    border-radius: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    padding-top: 20px;
   }
 
   .toggle-button {
-    display: flex;
+    display: block;
   }
-}
-
-.container .left-con {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  background-color: var(--background-color-2);
-  padding: 10px;
-  margin-right: 20px;
-  margin-left: 20px;
-  border-radius: 15px;
-  box-shadow: var(--box-shadow);
-  animation: slideInFromTop 0.5s ease-in-out;
-}
-
-.collapsed {
-  display: none !important; /* Hide the left-con when collapsed */
-}
-
-@keyframes slideInFromTop {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.container .left-con .header {
-  flex: 1;
-  margin-top: 20px;
-  text-align: center;
-  background-color: var(--background-color-3); /* Added background color */
-  padding: 15px; /* Added padding for better spacing */
-}
-
-.container .left-con .header .header-title {
-  font-size: var(--font-size-3);
-}
-
-.container .left-con .header .header-title .user {
-  color: var(--primary-color);
-}
-
-.container .left-con .navigation {
-  flex: 5;
-  display: flex;
-  flex-direction: column;
-}
-
-.container .left-con .navigation .choose-nav {
-  background-color: var(--background-color-1);
-  padding: 10px; /* Added padding for consistency */
-  border-radius: var(--border-radius); /* Use theme variable */
-  height: 3em;
-  width: 100%;
-  font-size: var(--font-size-3);
-  transition: all .4s ease-in-out;
-  cursor: pointer;
-  margin-bottom: 15px;
-  border-radius: 15px;
-}
-
-.container .left-con .navigation .choose-nav:hover {
-  background-color: var(--background-color-4);
-}
-
-.container .left-con .navigation .choose-nav .active {
-  color: var(--primary-color);
-} 
-
-.container .left-con .navigation .choose-nav .overlap-group {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  display: flex;
-  height: 100%;
-  width: 100%;
-}
-
-.container .left-con .navigation .choose-nav .text-wrapper {
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.container .right-con {
-  display: flex;
-  flex-direction: row;
-  flex: 5;
-  background-color: var(--background-color-2);
-  padding: 10px;
-  margin: 0 20px 0 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  overflow-y: auto;
-  max-width: 100%;
 }

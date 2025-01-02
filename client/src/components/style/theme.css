@@ -1,25 +1,43 @@
-@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
 
 :root {
-    --primary-color: #00A2FF;
-    --secondary-color: #6c757d;
-    --font-family: 'roboto', sans-serif;
-    --font-size-1: 48px;
-    --font-size-2: 36px;
-    --font-size-3: 24px;
-    --font-size-4: 16px;
-    --border-radius: 15px;
-    --background-color-1: #191d2b;
-    --background-color-2: #304a6e;
-    --background-color-3: #2d4669;
-    --background-color-4: #272d43;
-    --white: #fff;
-    --edit-btn-color: #00A2FF;
-    --edit-btn-hover-color: #0382cc;
-    --delete-btn-color: #FF5500;
-    --delete-btn-hover-color: #d94800;
-    --error-color: #FF0000;
-    --income-color: #55efc4;
-    --expense-color: #F07956;
-    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
+  --primary-color: #00a2ff;
+  --secondary-color: #6c757d;
+  --font-family: "roboto", sans-serif;
+  --font-size-1: 48px;
+  --font-size-2: 36px;
+  --font-size-3: 24px;
+  --font-size-4: 16px;
+  --border-radius: 15px;
+  --background-color-1: #191d2b;
+  --background-color-2: #304a6e;
+  --background-color-3: #2d4669;
+  --background-color-4: #272d43;
+  --white: #fff;
+  --edit-btn-color: #00a2ff;
+  --edit-btn-hover-color: #0382cc;
+  --delete-btn-color: #ff5500;
+  --delete-btn-hover-color: #d94800;
+  --error-color: #ff0000;
+  --income-color: #55efc4;
+  --expense-color: #f07956;
+  --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --font-size-1: 36px;
+    --font-size-2: 28px;
+    --font-size-3: 18px;
+    --font-size-4: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size-1: 32px;
+    --font-size-2: 24px;
+    --font-size-3: 16px;
+    --font-size-4: 12px;
+  }
 }

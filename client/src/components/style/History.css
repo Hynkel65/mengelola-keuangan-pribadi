@@ -1,8 +1,13 @@
 .history {
+  height: 100%;
+  background-color: var(--background-color-3);
+  color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 1rem;
+  flex: 1;
 }
 
 .history .history-item {

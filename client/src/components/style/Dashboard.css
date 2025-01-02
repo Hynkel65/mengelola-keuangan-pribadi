@@ -5,74 +5,70 @@
   border-radius: var(--border-radius);
   height: 400px;
   width: 100%;
-  place-content: center;
+  margin-bottom: 20px;
 }
 
 .dashboard-con {
-  padding: 20px; /* Standardized padding */
-  flex: 1;
+  padding: 20px;
   background-color: var(--background-color-2);
   color: var(--white);
-  height: 100%;
-  align-items: center;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
-
 
 .con {
   background-color: var(--background-color-3);
   color: var(--white);
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 100%;
   border-radius: var(--border-radius);
   text-align: center;
-  margin: 10px;
+  margin-bottom: 20px;
   padding: 20px;
   box-shadow: var(--box-shadow);
-  transition: transform 0.2s; /* Added transition for hover effect */
 }
 
-.con:hover {
-  transform: scale(1.02); /* Slightly scale on hover for effect */
+.con h2 {
+  margin-bottom: 0;
 }
 
 .con span {
-  color: var(--primary-color);
+  font-size: 0.875rem; /* Smaller font size for "bulan ini" */
+  color: #ccc; /* Slightly lighter text color */
+  align-self: center;
+}
+
+.con h3 {
+  color: var(--white);
 }
 
 .main-content {
   display: flex;
   flex-direction: row; /* Default to row */
-}
-
-@media (max-width: 768px) { /* Adjust the breakpoint as needed */
-  .main-content {
-    flex-direction: column; /* Change to column on smaller screens */
-  }
+  flex: 1;
+  gap: 20px;
 }
 
 .left-content,
 .right-content {
   flex: 1;
-  margin: 10px;
   display: flex;
   flex-direction: column;
 }
 
-.history-con {
-  height: 100%;
-  background-color: var(--background-color-3);
-  color: var(--white);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 10px; /* Added padding for better spacing */
-}
+@media (max-width: 768px) {
+  .chart {
+    width: 100%;
+  }
 
-.history-con input {
-  width: 100%;
-  padding: 8px;
-  border-radius: var(--border-radius);
-  background-color: var(--background-color-2);
-  color: var(--white);
+  .main-content {
+    flex-direction: column; /* Change to column on smaller screens */
+  }
+
+  .left-content,
+  .right-content {
+    margin: 0;
+  }
 }

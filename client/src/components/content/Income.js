@@ -198,7 +198,6 @@ const Income = ({ getFileInputRef, selectedIncome, setSelectedIncome }) => {
                         year: 'numeric',
                       })}
                     </span>
-                    <span className="category">{incomeOptions.find(option => option.value === income.category).label}</span>
                   </div>
                 </div>
                 <div className="edit">
