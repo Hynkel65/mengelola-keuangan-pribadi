@@ -1,5 +1,5 @@
 .analysis-con {
-  padding: 20px; /* Standardized padding */
+  padding: 20px;
   flex: 1;
   background-color: var(--background-color-2);
   color: var(--white);
@@ -56,7 +56,7 @@
   background-color: var(--background-color-2);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  margin: 10px; /* Added margin for spacing */
+  margin: 10px;
 }
 
 .monthly-summary h3 {
@@ -90,7 +90,7 @@
   background-color: var(--background-color-2);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  margin: 10px; /* Added margin for spacing */
+  margin: 10px;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -107,7 +107,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin: 10px; /* Added margin for spacing */
+  margin: 10px;
 }
 
 .budget-table {
@@ -141,11 +141,11 @@
 .budget-table button {
   margin: 0 5px;
   padding: 8px 15px;
-  transition: background-color 0.2s ease; /* Added transition for hover effect */
+  transition: background-color 0.2s ease;
 }
 
 .budget-table button:hover {
-  background-color: var(--edit-btn-hover-color); /* Change to hover color */
+  background-color: var(--edit-btn-hover-color);
 }
 
 @media (max-width: 768px) {

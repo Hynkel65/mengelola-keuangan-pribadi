@@ -35,8 +35,8 @@
 }
 
 .con span {
-  font-size: 0.875rem; /* Smaller font size for "bulan ini" */
-  color: #ccc; /* Slightly lighter text color */
+  font-size: 0.875rem;
+  color: #ccc;
   align-self: center;
 }
 
@@ -46,7 +46,7 @@
 
 .main-content {
   display: flex;
-  flex-direction: row; /* Default to row */
+  flex-direction: row;
   flex: 1;
   gap: 20px;
 }
@@ -64,7 +64,7 @@
   }
 
   .main-content {
-    flex-direction: column; /* Change to column on smaller screens */
+    flex-direction: column;
   }
 
   .left-content,

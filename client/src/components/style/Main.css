@@ -1,6 +1,6 @@
 @import "./theme.css";
 
-/* Base Styles */
+
 * {
   margin: 0;
   padding: 0;
@@ -18,7 +18,7 @@ body {
   font-family: var(--font-family);
 }
 
-/* Typography */
+
 h1,
 h2,
 h3 {
@@ -26,7 +26,7 @@ h3 {
   text-transform: uppercase;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: var(--primary-color); /* Consistent color */
+  color: var(--primary-color); 
 }
 
 h1 {
@@ -42,7 +42,7 @@ p {
   font-size: var(--font-size-4);
 }
 
-/* Buttons */
+
 button {
   padding: 0.75rem 1rem;
   background-color: var(--edit-btn-color);
@@ -59,24 +59,24 @@ button:hover {
 }
 
 .delete-btn {
-  background-color: var(--delete-btn-color); /* No !important needed */
+  background-color: var(--delete-btn-color); 
 }
 
 .delete-btn:hover {
-  background-color: var(--delete-btn-hover-color); /* No !important needed */
+  background-color: var(--delete-btn-hover-color); 
 }
 
-/* Layout */
+
 .container {
   display: flex;
   height: 90vh;
   width: 90vw;
   border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: var(--box-shadow); /* Added box-shadow to container */
+  box-shadow: var(--box-shadow); 
   background-color: var(
     --background-color-4
-  ); /* Added background color to container */
+  ); 
 }
 
 .left-con {
@@ -101,9 +101,9 @@ button:hover {
   overflow-x: hidden;
 }
 
-/* Header */
+
 .header {
-  margin-bottom: 20px; /* Consistent spacing */
+  margin-bottom: 20px; 
   text-align: center;
 }
 
@@ -115,28 +115,28 @@ button:hover {
   color: var(--primary-color);
 }
 
-/* Navigation */
+
 .navigation {
   display: flex;
   flex-direction: column;
 }
 
 .choose-nav {
-  background-color: var(--background-color-3); /* Slightly darker default */
+  background-color: var(--background-color-3); 
   padding: 10px;
   border-radius: var(--border-radius);
   margin-bottom: 15px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Smoother transition */
-  text-transform: uppercase; /* Move to .text-wrapper */
+  transition: background-color 0.3s ease; 
+  text-transform: uppercase; 
 }
 
 .choose-nav:hover {
-  background-color: var(--background-color-4); /* Darker on hover */
+  background-color: var(--background-color-4); 
 }
 
 .active .text-wrapper {
-  /* More specific selector */
+  
   color: var(--primary-color);
 }
 
@@ -149,7 +149,7 @@ button:hover {
   text-transform: uppercase;
 }
 
-/* Toggle Button */
+
 .toggle-button {
   display: none;
   position: fixed;
@@ -161,7 +161,7 @@ button:hover {
   font-size: 1rem;
 }
 
-/* Media Queries */
+
 @media (max-width: 768px) {
   .container {
     flex-direction: column;

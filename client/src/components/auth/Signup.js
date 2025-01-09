@@ -13,7 +13,6 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Clear error when form fields change
   useEffect(() => {
     setError('');
   }, [formData.username, formData.password, formData.confirmPassword]);
@@ -21,7 +20,6 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Basic validation
     if (!formData.username.trim() || !formData.password.trim() || !formData.confirmPassword.trim()) {
       setError('Semua field harus diisi');
       return;
