@@ -23,7 +23,6 @@ Other Tools: Visual Studio Code, Git
 
 Screenshots
 
-![Menu beranda](Screenshot/beranda.png)
 ![Menu dasbor](Screenshot/dasbor.png)
 ![Menu login](Screenshot/login.png)
 ![Menu registrasi](Screenshot/registrasi.png)
