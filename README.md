@@ -11,7 +11,7 @@ Project Status: The project is fully completed with room for expand.
 Technologies Used
 
 Use MERN Stack Tech
-Framwork: Express.js, React.js, Node.js
+Framework: Express.js, React.js, Node.js
 
 Database: MongoDB
 
